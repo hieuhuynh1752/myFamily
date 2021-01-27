@@ -10,7 +10,7 @@ const Home = () => {
   const {state,dispatch} = useAuth();
 
   const handleLogout = () => {
-    AsyncStorage.removeItem('$userInfo');
+    AsyncStorage.removeItem('@userInfo');
     dispatch({ type: LOGOUT });
   };
 
