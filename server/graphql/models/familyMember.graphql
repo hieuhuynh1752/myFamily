@@ -1,7 +1,7 @@
 type FamilyMember{
     id: ID!
-    user: User @hasOne
-    family: Family @hasOne
+    user: User @belongsTo
+    family: Family @belongsTo
     role: String!
     created_at: DateTime!
     updated_at: DateTime!
@@ -14,3 +14,23 @@ type FamilyMember{
     toDoLists: [ToDoList!]! @hasMany
 }
 
+extend type Mutation @guard(with: ["api"]) {
+    createFamilyMember(input: CreateFamilyMemberInput! @spread): FamilyMember @create
+}
+
+input CreateFamilyMemberInput{
+    user: CreateUserBelongsTo
+    family: CreateFamilyBelongsTo
+    role: String!
+}
+
+input CreateUserBelongsTo{
+    connect: ID
+    disconnect: Boolean
+    delete: Boolean
+}
+input CreateFamilyBelongsTo{
+    connect: ID
+    disconnect: Boolean
+    delete: Boolean
+}

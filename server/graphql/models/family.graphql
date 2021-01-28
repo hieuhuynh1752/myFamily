@@ -3,5 +3,13 @@ type Family{
     name: String!
     created_at: DateTime!
     updated_at: DateTime!
-    familyMember: FamilyMember @belongsTo
+    familyMember: FamilyMember @hasMany
+}
+
+extend type Mutation @guard(with: ["api"]) {
+    createFamily(input: CreateFamilyInput! @spread): Family @create
+}
+
+input CreateFamilyInput{
+    name: String!
 }

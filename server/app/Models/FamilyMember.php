@@ -5,20 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class FamilyMember extends Model
 {
     use HasFactory;
 
-    public function user(): HasOne
+    public function user(): BelongsTo
     {
-        return $this->hasOne(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function family(): HasOne
+    public function family(): BelongsTo
     {
-        return $this->hasOne(Family::class, 'family_id');
+        return $this->belongsTo(Family::class, 'family_id');
     }
 
     public function event(): HasMany

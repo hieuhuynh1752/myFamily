@@ -4,14 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Family extends Model
 {
     use HasFactory;
 
-    public function familyMember(): BelongsTo
+    public function familyMember(): HasMany
     {
-        return $this->belongsTo(FamilyMember::class, 'family_id');
+        return $this->hasMany(FamilyMember::class, 'family_id');
     }
 }
