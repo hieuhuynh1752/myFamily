@@ -1,0 +1,14 @@
+type Event {
+    id: ID!
+    familyMember: FamilyMember @belongsTo
+    title: String!
+    description: String!
+    start_date_time: DateTime!
+    end_date_time: DateTime!
+    color: String!
+    recurrence: String!
+    event_id: ID!
+    reminder: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+}

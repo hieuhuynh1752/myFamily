@@ -1,0 +1,7 @@
+type Like {
+    id: ID!
+    familyMember: FamilyMember! @belongsTo
+    post: Post! @belongsTo
+    created_at: DateTime!
+    updated_at: DateTime!
+}

@@ -1,0 +1,8 @@
+type Comment {
+    id: ID!
+    familyMember: FamilyMember @belongsTo
+    post: Post @belongsTo
+    content: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+}

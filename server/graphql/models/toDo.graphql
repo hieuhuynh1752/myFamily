@@ -1,0 +1,11 @@
+type ToDo{
+    id: ID!
+    toDoList: ToDoList! @belongsTo
+    familyMember: FamilyMember! @belongsTo
+    name: String!
+    description: String!
+    image: String!
+    is_completed: Boolean!
+    created_at: DateTime!
+    updated_at: DateTime!
+}

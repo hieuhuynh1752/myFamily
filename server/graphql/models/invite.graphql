@@ -1,0 +1,8 @@
+type Invite {
+    id: ID!
+    familyMember: FamilyMember! @belongsTo
+    email: String!
+    status: Boolean!
+    created_at: DateTime!
+    updated_at: DateTime!
+}

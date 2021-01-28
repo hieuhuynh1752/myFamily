@@ -1,7 +1,7 @@
-type Family{
+type ToDoList{
     id: ID!
+    familyMember: FamilyMember! @belongsTo
     name: String!
     created_at: DateTime!
     updated_at: DateTime!
-    familyMember: FamilyMember @belongsTo
 }

@@ -1,0 +1,523 @@
+directive @all(
+    """
+    Specify the class name of the model to use.
+    This is only needed when the default model detection does not work.
+    """
+    model: String
+
+    """
+    Apply scopes to the underlying query.
+    """
+    scopes: [String!]
+) on FIELD_DEFINITION
+
+directive @auth(
+    """
+    Specify which guard to use, e.g. "api".
+    When not defined, the default from `lighthouse.php` is used.
+    """
+    guard: String
+) on FIELD_DEFINITION
+
+directive @belongsTo(
+    """
+    Specify the relationship method name in the model class,
+    if it is named different from the field in the schema.
+    """
+    relation: String
+
+    """
+    Apply scopes to the underlying query.
+    """
+    scopes: [String!]
+) on FIELD_DEFINITION
+
+directive @create(
+    """
+    Specify the class name of the model to use.
+    This is only needed when the default model detection does not work.
+    """
+    model: String
+
+    """
+    Specify the name of the relation on the parent model.
+    This is only needed when using this directive as a nested arg
+    resolver and if the name of the relation is not the arg name.
+    """
+    relation: String
+) on FIELD_DEFINITION | ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
+directive @delete(
+    """
+    DEPRECATED use @globalId, will be removed in v6
+
+    Set to `true` to use global ids for finding the model.
+    If set to `false`, regular non-global ids are used.
+    """
+    globalId: Boolean = false
+
+    """
+    Specify the class name of the model to use.
+    This is only needed when the default model detection does not work.
+    """
+    model: String
+
+    """
+    Specify the name of the relation on the parent model.
+    This is only needed when using this directive as a nested arg
+    resolver and if the name of the relation is not the arg name.
+    """
+    relation: String
+) on FIELD_DEFINITION | ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
+directive @deprecated(
+    """
+    Explains why this element was deprecated, usually also including a
+    suggestion for how to access supported similar data. Formatted
+    in [Markdown](https://daringfireball.net/projects/markdown/).
+    """
+    reason: String = "No longer supported"
+) on FIELD_DEFINITION
+
+directive @field(
+    """
+    A reference to the resolver function to be used.
+    Consists of two parts: a class name and a method name, seperated by an `@` symbol.
+    If you pass only a class name, the method name defaults to `__invoke`.
+    """
+    resolver: String!
+
+    """
+    Supply additional data to the resolver.
+    """
+    args: [String!]
+) on FIELD_DEFINITION
+
+directive @find(
+    """
+    Specify the class name of the model to use.
+    This is only needed when the default model detection does not work.
+    """
+    model: String
+
+    """
+    Apply scopes to the underlying query.
+    """
+    scopes: [String!]
+) on FIELD_DEFINITION
+
+directive @first(
+    """
+    Specify the class name of the model to use.
+    This is only needed when the default model detection does not work.
+    """
+    model: String
+
+    """
+    Apply scopes to the underlying query.
+    """
+    scopes: [String!]
+) on FIELD_DEFINITION
+
+
+directive @forceDelete(
+    """
+    DEPRECATED use @globalId, will be removed in v6
+
+    Set to `true` to use global ids for finding the model.
+    If set to `false`, regular non-global ids are used.
+    """
+    globalId: Boolean = false
+
+    """
+    Specify the class name of the model to use.
+    This is only needed when the default model detection does not work.
+    """
+    model: String
+) on FIELD_DEFINITION
+
+directive @eq(
+    """
+    Specify the database column to compare.
+    Required if the directive is:
+    - used on an argument and the database column has a different name
+    - used on a field
+    """
+    key: String
+
+    """
+    Provide a value to compare against.
+    Only required when this directive is used on a field.
+    """
+    value: String
+) on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION | FIELD_DEFINITION
+
+directive @event(
+    """
+    Specify the fully qualified class name (FQCN) of the event to dispatch.
+    """
+    dispatch: String!
+)  on FIELD_DEFINITION
+
+directive @guard(
+    """
+    Specify which guards to use, e.g. ["api"].
+    When not defined, the default from `lighthouse.php` is used.
+    """
+    with: [String!]
+) on FIELD_DEFINITION | OBJECT
+
+directive @hash on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
+directive @hasMany(
+    """
+    Specify the relationship method name in the model class,
+    if it is named different from the field in the schema.
+    """
+    relation: String
+
+    """
+    Apply scopes to the underlying query.
+    """
+    scopes: [String!]
+
+    """
+    Allows to resolve the relation as a paginated list.
+    Allowed values: `paginator`, `connection`.
+    """
+    type: HasManyType
+
+    """
+    Allow clients to query paginated lists without specifying the amount of items.
+    Overrules the `pagination.default_count` setting from `lighthouse.php`.
+    """
+    defaultCount: Int
+
+    """
+    Limit the maximum amount of items that clients can request from paginated lists.
+    Overrules the `pagination.max_count` setting from `lighthouse.php`.
+    """
+    maxCount: Int
+
+    """
+    Specify a custom type that implements the Edge interface
+    to extend edge object.
+    Only applies when using Relay style "connection" pagination.
+    """
+    edgeType: String
+) on FIELD_DEFINITION
+
+"""
+Options for the `type` argument of `@hasMany`.
+"""
+enum HasManyType {
+    """
+    Offset-based pagination, similar to the Laravel default.
+    """
+    PAGINATOR
+
+    """
+    Cursor-based pagination, compatible with the Relay specification.
+    """
+    CONNECTION
+}
+
+directive @hasOne(
+    """
+    Specify the relationship method name in the model class,
+    if it is named different from the field in the schema.
+    """
+    relation: String
+
+    """
+    Apply scopes to the underlying query.
+    """
+    scopes: [String!]
+) on FIELD_DEFINITION
+
+directive @in(
+    """
+    Specify the database column to compare.
+    Only required if database column has a different name than the attribute in your schema.
+    """
+    key: String
+) on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
+directive @include(
+"""
+If the "if" value is true the field this is connected with will be included in the query response.
+Otherwise it will not.
+"""
+if: Boolean
+) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
+
+directive @limit on ARGUMENT_DEFINITION
+
+directive @method(
+    """
+    Specify the method of which to fetch the data from.
+    Defaults to the name of the field if not given.
+    """
+    name: String
+) on FIELD_DEFINITION
+
+directive @notIn(
+    """
+    Specify the database column to compare.
+    Only required if database column has a different name than the attribute in your schema.
+    """
+    key: String
+) on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
+directive @orderBy(
+    """
+    Restrict the allowed column names to a well-defined list.
+    This improves introspection capabilities and security.
+    Mutually exclusive with the `columnsEnum` argument.
+    Only used when the directive is added on an argument.
+    """
+    columns: [String!]
+
+    """
+    Use an existing enumeration type to restrict the allowed columns to a predefined list.
+    This allowes you to re-use the same enum for multiple fields.
+    Mutually exclusive with the `columns` argument.
+    Only used when the directive is added on an argument.
+    """
+    columnsEnum: String
+
+    """
+    The database column for which the order by clause will be applied on.
+    Only used when the directive is added on a field.
+    """
+    column: String
+
+    """
+    The direction of the order by clause.
+    Only used when the directive is added on a field.
+    """
+    direction: OrderByDirection = ASC
+) on ARGUMENT_DEFINITION | FIELD_DEFINITION
+
+"""
+Options for the `direction` argument on `@orderBy`.
+"""
+enum OrderByDirection {
+    """
+    Sort in ascending order.
+    """
+    ASC
+
+    """
+    Sort in descending order.
+    """
+    DESC
+}
+
+directive @paginate(
+    """
+    Which pagination style should be used.
+    """
+    type: PaginateType = PAGINATOR
+
+    """
+    Specify the class name of the model to use.
+    This is only needed when the default model detection does not work.
+    """
+    model: String
+
+    """
+    Point to a function that provides a Query Builder instance.
+    This replaces the use of a model.
+    """
+    builder: String
+
+    """
+    Apply scopes to the underlying query.
+    """
+    scopes: [String!]
+
+    """
+    Allow clients to query paginated lists without specifying the amount of items.
+    Overrules the `pagination.default_count` setting from `lighthouse.php`.
+    """
+    defaultCount: Int
+
+    """
+    Limit the maximum amount of items that clients can request from paginated lists.
+    Overrules the `pagination.max_count` setting from `lighthouse.php`.
+    """
+    maxCount: Int
+) on FIELD_DEFINITION
+
+"""
+Options for the `type` argument of `@paginate`.
+"""
+enum PaginateType {
+    """
+    Offset-based pagination, similar to the Laravel default.
+    """
+    PAGINATOR
+
+    """
+    Cursor-based pagination, compatible with the Relay specification.
+    """
+    CONNECTION
+}
+
+directive @scalar(
+    """
+    Reference to a class that extends `\GraphQL\Type\Definition\ScalarType`.
+    """
+    class: String!
+) on SCALAR
+
+directive @search(
+    """
+    Specify a custom index to use for search.
+    """
+    within: String
+) on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
+directive @update(
+    """
+    Specify the class name of the model to use.
+    This is only needed when the default model detection does not work.
+    """
+    model: String
+
+    """
+    Specify the name of the relation on the parent model.
+    This is only needed when using this directive as a nested arg
+    resolver and if the name of the relation is not the arg name.
+    """
+    relation: String
+) on FIELD_DEFINITION | ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
+directive @upsert(
+    """
+    Specify the class name of the model to use.
+    This is only needed when the default model detection does not work.
+    """
+    model: String
+
+    """
+    Set to `true` to use global ids for finding the model.
+    If set to `false`, regular non-global ids are used.
+    """
+    globalId: Boolean = false
+
+    """
+    Specify the name of the relation on the parent model.
+    This is only needed when using this directive as a nested arg
+    resolver and if the name of the relation is not the arg name.
+    """
+    relation: String
+) on FIELD_DEFINITION | ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
+directive @validator(
+    """
+    The name of the class to use.
+
+    If defined on an input, this defaults to a class called `{$inputName}Validator` in the
+    default validator namespace. For fields, it uses the name of the parent type
+    and the field name: `{$parent}{$field}Validator`.
+    """
+    class: String
+) on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION | FIELD_DEFINITION | INPUT_OBJECT
+
+directive @where(
+    """
+    Specify the operator to use within the WHERE condition.
+    """
+    operator: String = "="
+
+    """
+    Specify the database column to compare.
+    Only required if database column has a different name than the attribute in your schema.
+    """
+    key: String
+
+    """
+    Use Laravel's where clauses upon the query builder.
+    """
+    clause: String
+)  on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
+directive @whereAuth(
+    """
+    Name of the relationship that links to the user model.
+    """
+    relation: String!
+
+    """
+    Specify which guard to use, e.g. "api".
+    When not defined, the default from `lighthouse.php` is used.
+    """
+    guard: String
+) on FIELD_DEFINITION
+
+directive @whereBetween(
+    """
+    Specify the database column to compare.
+    Only required if database column has a different name than the attribute in your schema.
+    """
+    key: String
+)  on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
+directive @whereConditions(
+    """
+    Restrict the allowed column names to a well-defined list.
+    This improves introspection capabilities and security.
+    Mutually exclusive with the `columnsEnum` argument.
+    """
+    columns: [String!]
+
+    """
+    Use an existing enumeration type to restrict the allowed columns to a predefined list.
+    This allowes you to re-use the same enum for multiple fields.
+    Mutually exclusive with the `columns` argument.
+    """
+    columnsEnum: String
+) on ARGUMENT_DEFINITION
+
+directive @whereHasConditions(
+    """
+    The Eloquent relationship that the conditions will be applied to.
+
+    This argument can be omitted if the argument name follows the naming
+    convention `has{$RELATION}`. For example, if the Eloquent relationship
+    is named `posts`, the argument name must be `hasPosts`.
+    """
+    relation: String
+
+    """
+    Restrict the allowed column names to a well-defined list.
+    This improves introspection capabilities and security.
+    Mutually exclusive with the `columnsEnum` argument.
+    """
+    columns: [String!]
+
+    """
+    Use an existing enumeration type to restrict the allowed columns to a predefined list.
+    This allowes you to re-use the same enum for multiple fields.
+    Mutually exclusive with the `columns` argument.
+    """
+    columnsEnum: String
+) on ARGUMENT_DEFINITION
+
+
+directive @with(
+    """
+    Specify the relationship method name in the model class,
+    if it is named different from the field in the schema.
+    """
+    relation: String
+
+    """
+    Apply scopes to the underlying query.
+    """
+    scopes: [String!]
+) on FIELD_DEFINITION
+
+directive @spread on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
