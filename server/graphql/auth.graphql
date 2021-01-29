@@ -13,7 +13,7 @@ type User {
     email: String!
     created_at: DateTime!
     updated_at: DateTime!
-    familyMember: FamilyMember @hasMany
+    familyMember: [FamilyMember!]! @hasMany
 }
 
 type AuthPayload {

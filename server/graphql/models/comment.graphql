@@ -1,8 +1,31 @@
 type Comment {
     id: ID!
-    familyMember: FamilyMember @belongsTo
-    post: Post @belongsTo
+    familyMember: FamilyMember! @belongsTo
+    post: Post! @belongsTo
     content: String!
     created_at: DateTime!
     updated_at: DateTime!
+}
+
+extend type Mutation @guard(with: ["api"]) {
+    createComment(input: CreateCommentInput! @spread): Comment @create
+    deleteComment(id: ID!): Comment @delete
+    updateComment(input: UpdateCommentInput! @spread): Comment @update
+}
+
+input CreateCommentInput{
+    familyMember: CreateFamilyMemberBelongsTo
+    content: String!
+    post: CreatePostBelongsTo
+}
+
+input UpdateCommentInput{
+    id: ID!
+    content: String!
+}
+
+input CreatePostBelongsTo{
+    connect: ID
+    disconnect: Boolean
+    delete: Boolean
 }

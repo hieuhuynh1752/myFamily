@@ -5,13 +5,13 @@ type FamilyMember{
     role: String!
     created_at: DateTime!
     updated_at: DateTime!
-    comments: [Comment!]! @hasMany
-    events: [Event!]! @hasMany
-    invites: [Invite!]! @hasMany
-    likes: [Like!]! @hasMany
-    posts: [Post!]! @hasMany
-    toDos: [ToDo!]! @hasMany
-    toDoLists: [ToDoList!]! @hasMany
+    comment: [Comment!]! @hasMany
+    event: [Event!]! @hasMany
+    invite: [Invite!]! @hasMany
+    like: [Like!]! @hasMany
+    post: [Post!]! @hasMany
+    toDo: [ToDo!]! @hasMany
+    toDoList: [ToDoList!]! @hasMany
 }
 
 extend type Mutation @guard(with: ["api"]) {

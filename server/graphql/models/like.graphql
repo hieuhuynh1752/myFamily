@@ -5,3 +5,14 @@ type Like {
     created_at: DateTime!
     updated_at: DateTime!
 }
+
+extend type Mutation @guard(with: ["api"]) {
+    createLike(input: CreateLikeInput! @spread): Like @create
+    unLike(id: ID!): Like @delete
+}
+
+input CreateLikeInput{
+    familyMember: CreateFamilyMemberBelongsTo
+    post: CreatePostBelongsTo
+}
+

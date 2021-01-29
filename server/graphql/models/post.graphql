@@ -2,9 +2,33 @@ type Post{
     id: ID!
     familyMember: FamilyMember! @belongsTo
     content: String!
-    image: String!
+    image: String
     created_at: DateTime!
     updated_at: DateTime!
-    comments: [Comment!]! @hasMany
-    likes: [Like!]! @hasMany
+    comment: [Comment!]! @hasMany
+    like: [Like!]! @hasMany
+}
+
+extend type Mutation @guard(with: ["api"]) {
+    createPost(input: CreatePostInput! @spread): Post @create
+    deletePost(id: ID!): Post @delete
+    updatePost(input: UpdatePostInput! @spread): Post @update
+}
+
+input CreatePostInput{
+    familyMember: CreateFamilyMemberBelongsTo
+    content: String!
+    image: String
+}
+
+input UpdatePostInput{
+    id: ID!
+    content: String!
+    image: String
+}
+
+input CreateFamilyMemberBelongsTo{
+    connect: ID
+    disconnect: Boolean
+    delete: Boolean
 }

@@ -3,7 +3,11 @@ type Family{
     name: String!
     created_at: DateTime!
     updated_at: DateTime!
-    familyMember: FamilyMember @hasMany
+    familyMember: [FamilyMember!]! @hasMany
+}
+
+extend type Query  @guard(with:["api"]){
+    family(id: ID @eq): Family @find
 }
 
 extend type Mutation @guard(with: ["api"]) {
