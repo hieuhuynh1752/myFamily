@@ -4,4 +4,20 @@ type ToDoList{
     name: String!
     created_at: DateTime!
     updated_at: DateTime!
+    toDo: [ToDo!]! @hasMany
+}
+
+extend type Mutation @guard(with: ["api"]){
+    createToDoList(input: CreateToDoListInput! @spread): ToDoList @create
+    deleteToDoList(id: ID!): ToDoList @delete
+    updateToDoList(input: UpdateToDoListInput! @spread): ToDoList @update
+}
+
+input CreateToDoListInput{
+    familyMember: CreateFamilyMemberBelongsTo!
+    name: String!
+}
+
+input UpdateToDoListInput{
+    name: String!
 }

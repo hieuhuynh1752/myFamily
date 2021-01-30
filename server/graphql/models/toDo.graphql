@@ -4,8 +4,36 @@ type ToDo{
     familyMember: FamilyMember! @belongsTo
     name: String!
     description: String!
-    image: String!
+    image: String
     is_completed: Boolean!
     created_at: DateTime!
     updated_at: DateTime!
+}
+
+extend type Mutation @guard(with:["api"]){
+    createToDo(input: CreateToDoInput! @spread): ToDo @create
+    deleteToDo(id: ID!): ToDo @delete
+    updateToDo(input: UpdateToDoInput! @spread): ToDo @update
+}
+
+input CreateToDoInput{
+    toDoList: CreateToDoListBelongsTo!
+    familyMember: CreateFamilyMemberBelongsTo!
+    name: String!
+    description: String!
+    image: String
+    is_completed: Boolean!
+}
+
+input UpdateToDoInput{
+    name: String!
+    description: String!
+    image: String
+    is_completed: Boolean!
+}
+
+input CreateToDoListBelongsTo{
+    connect: ID
+    disconnect: Boolean
+    delete: Boolean
 }

@@ -16,7 +16,7 @@ extend type Mutation @guard(with: ["api"]) {
 }
 
 input CreatePostInput{
-    familyMember: CreateFamilyMemberBelongsTo
+    familyMember: CreateFamilyMemberBelongsTo!
     content: String!
     image: String
 }

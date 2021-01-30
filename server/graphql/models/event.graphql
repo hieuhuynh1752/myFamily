@@ -12,3 +12,32 @@ type Event {
     created_at: DateTime!
     updated_at: DateTime!
 }
+
+extend type Mutation  @guard(with: ["api"]){
+    createEvent(input: CreateEventInput! @spread): Event @create
+    deleteEvent(id: ID!): Event @delete
+    updateEvent(input: UpdateEventInput! @spread): Event @update
+}
+
+input CreateEventInput{
+    familyMember: CreateFamilyMemberBelongsTo
+    title: String!
+    description: String!
+    start_date_time: DateTime!
+    end_date_time: DateTime!
+    color: String
+    recurrence: String
+    event_id: ID
+    reminder: String!
+}
+
+input UpdateEventInput{
+    title: String!
+    description: String!
+    start_date_time: DateTime!
+    end_date_time: DateTime!
+    color: String
+    recurrence: String
+    event_id: ID
+    reminder: String!
+}
