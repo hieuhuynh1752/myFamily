@@ -1,11 +1,10 @@
 import React, {useState, useEffect} from 'react'
 import {ActivityIndicator, View, StyleSheet} from 'react-native'
 import {useAuth} from '../context/userContext'
-import {useTheme} from 'react-native-paper';
+import {theme} from '../core/theme';
 
-const Splash = ({navigation})=>{
+const SplashScreen = ({navigation})=>{
     const {state} = useAuth();
-    const {colors} = useTheme();
     const [animating, setAnimating] = useState(true)
     useEffect(()=>{
         setTimeout(()=>{
@@ -17,13 +16,13 @@ const Splash = ({navigation})=>{
     },[])
 
     return(
-        <View style={[styles.container,{backgroundColor:colors.matcha}]}>
+        <View style={[styles.container,{backgroundColor:theme.colors.primary}]}>
             <ActivityIndicator animating={animating} color="#ffffff" size="large" style={styles.activityIndicator}/>
         </View>
     )
 }
 
-export default Splash;
+export default SplashScreen;
 
 const styles = StyleSheet.create({
     container:{

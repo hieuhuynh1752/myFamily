@@ -1,15 +1,15 @@
-import React, {useState, useCallback, useMemo} from 'react';
+import React from 'react';
 import {ApolloClient, InMemoryCache, from, HttpLink} from '@apollo/client';
 import {ApolloProvider} from '@apollo/client';
 import {setContext} from '@apollo/client/link/context';
 
-import {getToken} from './utils/authenSetup';
+import {getToken} from './core/authenSetup';
 import {onError} from '@apollo/client/link/error';
 import {UserContextProvider} from './context/userContext';
-import {ThemeContextProvider} from './context/themeContext';
-import Navigator from './navigation/Navigator';
-//import theme from './utils/theme';
 import {Provider as PaperProvider} from 'react-native-paper';
+import {NavigationContainer} from '@react-navigation/native';
+import Navigator from './navigation/Navigator';
+import {theme} from './core/theme';
 import {API_URL} from '@env';
 
 //apollo-setup
@@ -44,9 +44,11 @@ const App = () => {
   return (
     <ApolloProvider client={client}>
       <UserContextProvider>
-        <ThemeContextProvider>
-          <Navigator />
-        </ThemeContextProvider>
+        <PaperProvider theme={theme}>
+          <NavigationContainer theme={theme}>
+            <Navigator />
+          </NavigationContainer>
+        </PaperProvider>
       </UserContextProvider>
     </ApolloProvider>
   );

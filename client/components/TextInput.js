@@ -1,11 +1,10 @@
 import React, {memo} from 'react';
 import {View, StyleSheet, Text} from 'react-native';
-import {TextInput as Input, useTheme} from 'react-native-paper';
-//import { theme } from '../core/theme';
+import {TextInput as Input} from 'react-native-paper';
+import {theme} from '../core/theme';
 
 const TextInput = ({errorText, ...props}) => {
-  const theme =useTheme();
-    return (
+  return (
     <View style={styles.container}>
       <Input
         style={styles.input}
