@@ -2,15 +2,11 @@ import React, {useState, useCallback, useMemo} from 'react';
 import {ApolloClient, InMemoryCache, from, HttpLink} from '@apollo/client';
 import {ApolloProvider} from '@apollo/client';
 import {setContext} from '@apollo/client/link/context';
-import {NavigationContainer} from '@react-navigation/native';
+
 import {getToken} from './utils/authenSetup';
 import {onError} from '@apollo/client/link/error';
 import {UserContextProvider} from './context/userContext';
-import {
-  CombinedDarkTheme,
-  CombinedDefaultTheme,
-  PreferencesContext,
-} from './context/themeContext';
+import {ThemeContextProvider} from './context/themeContext';
 import Navigator from './navigation/Navigator';
 //import theme from './utils/theme';
 import {Provider as PaperProvider} from 'react-native-paper';
@@ -45,33 +41,12 @@ const client = new ApolloClient({
 //end of apollo-setup
 
 const App = () => {
-  //theme-setup
-  const [isThemeDark, setIsThemeDark] = useState(false);
-  let theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
-
-  const toggleTheme = useCallback(() => {
-    return setIsThemeDark(!isThemeDark);
-  }, [isThemeDark]);
-
-  const preferences = useMemo(
-    () => ({
-      toggleTheme,
-      isThemeDark,
-    }),
-    [toggleTheme, isThemeDark],
-  );
-  //end of theme-setup
-
   return (
     <ApolloProvider client={client}>
       <UserContextProvider>
-        <PreferencesContext.Provider value={preferences}>
-          <PaperProvider theme={theme}>
-            <NavigationContainer theme={theme}>
-              <Navigator />
-            </NavigationContainer>
-          </PaperProvider>
-        </PreferencesContext.Provider>
+        <ThemeContextProvider>
+          <Navigator />
+        </ThemeContextProvider>
       </UserContextProvider>
     </ApolloProvider>
   );

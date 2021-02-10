@@ -1,20 +1,24 @@
-import React,{useState, createRef} from 'react';
-import {StyleSheet,
-  TextInput,
+import React, {useState, createRef} from 'react';
+import {
+  StyleSheet,
   View,
   Text,
   ScrollView,
   Image,
   Keyboard,
   TouchableOpacity,
-  KeyboardAvoidingView,} from 'react-native';
+  KeyboardAvoidingView,
+} from 'react-native';
 import {useMutation} from '@apollo/client';
 import {REQUEST_LOGIN} from '../graphql/mutations/authentication/login';
 import {useAuth} from '../context/userContext';
-import {LOGIN} from '../context/userContext'
+import {LOGIN} from '../context/userContext';
 import Loader from '../components/Loader';
+import {useTheme, TextInput} from 'react-native-paper';
 
 const Login = ({navigation}) => {
+  const {colors} = useTheme();
+  console.log(colors);
   const {state, dispatch} = useAuth();
   const [accountValues, setAccountValues] = useState({
     username: '',
@@ -50,7 +54,7 @@ const Login = ({navigation}) => {
     if (accountValues.username === '') {
       alert('Please fill Email');
       return;
-    };
+    }
     if (accountValues.password === '') {
       alert('Please fill Password');
       return;
@@ -59,22 +63,21 @@ const Login = ({navigation}) => {
       await requestLoginMutation();
       console.log(accountValues);
       navigation.replace('Home');
-      
     } catch (error) {
       console.log(error);
-      setErrorText('Incorrect Username or Password! Please check again.')
+      setErrorText('Incorrect Username or Password! Please check again.');
     }
   };
 
   return (
-    <View style={styles.mainBody}>
+    <View style={[styles.mainBody, {backgroundColor: colors.matcha}]}>
       <Loader loading={requestLoginLoading} />
       <ScrollView
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{
           flex: 1,
           justifyContent: 'center',
-          alignContent: 'center',
+
         }}>
         <View>
           <KeyboardAvoidingView enabled>
@@ -91,44 +94,40 @@ const Login = ({navigation}) => {
             </View>
             <View style={styles.SectionStyle}>
               <TextInput
+                mode="outlined"
+                label="Email"
                 style={styles.inputStyle}
                 onChangeText={handleUsernameChange}
                 placeholder="Enter Email" //dummy@abc.com
-                placeholderTextColor="#ffffff"
                 autoCapitalize="none"
                 keyboardType="email-address"
                 returnKeyType="next"
                 onSubmitEditing={() =>
-                  passwordInputRef.current &&
-                  passwordInputRef.current.focus()
+                  passwordInputRef.current && passwordInputRef.current.focus()
                 }
-                underlineColorAndroid="#f000"
                 blurOnSubmit={false}
               />
             </View>
             <View style={styles.SectionStyle}>
               <TextInput
-                style={styles.inputStyle}
-                onChangeText={handlePasswordChange
-                }
+                mode="inline"
+                style={[styles.inputStyle,{borderRadius:0}]}
+                onChangeText={handlePasswordChange}
                 placeholder="Enter Password" //12345
-                placeholderTextColor="#ffffff"
+                label="Password"
                 keyboardType="default"
                 ref={passwordInputRef}
                 onSubmitEditing={Keyboard.dismiss}
                 blurOnSubmit={false}
                 secureTextEntry={true}
-                underlineColorAndroid="#f000"
                 returnKeyType="next"
               />
             </View>
             {errortext != '' ? (
-              <Text style={styles.errorTextStyle}>
-                {errortext}
-              </Text>
+              <Text style={styles.errorTextStyle}>{errortext}</Text>
             ) : null}
             <TouchableOpacity
-              style={styles.buttonStyle}
+              style={[styles.buttonStyle, {backgroundColor: colors.milo}]}
               activeOpacity={0.5}
               onPress={requestLogin}>
               <Text style={styles.buttonTextStyle}>LOGIN</Text>
@@ -150,26 +149,16 @@ export default Login;
 const styles = StyleSheet.create({
   mainBody: {
     flex: 1,
-    justifyContent: 'center',
-    backgroundColor: '#307ecc',
-    alignContent: 'center',
   },
   SectionStyle: {
     flexDirection: 'row',
-    height: 40,
-    marginTop: 20,
-    marginLeft: 35,
-    marginRight: 35,
-    margin: 10,
+    
   },
   buttonStyle: {
-    backgroundColor: '#7DE24E',
     borderWidth: 0,
     color: '#FFFFFF',
-    borderColor: '#7DE24E',
     height: 40,
     alignItems: 'center',
-    borderRadius: 10,
     marginLeft: 35,
     marginRight: 35,
     marginTop: 20,
@@ -182,12 +171,7 @@ const styles = StyleSheet.create({
   },
   inputStyle: {
     flex: 1,
-    color: 'white',
-    paddingLeft: 15,
-    paddingRight: 15,
-    borderWidth: 1,
-    borderRadius: 10,
-    borderColor: '#dadae8',
+    
   },
   registerTextStyle: {
     color: '#FFFFFF',

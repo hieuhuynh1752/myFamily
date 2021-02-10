@@ -17,7 +17,7 @@ const Splash = ({navigation})=>{
     },[])
 
     return(
-        <View style={{color:colors.primary}}>
+        <View style={[styles.container,{backgroundColor:colors.matcha}]}>
             <ActivityIndicator animating={animating} color="#ffffff" size="large" style={styles.activityIndicator}/>
         </View>
     )
@@ -26,12 +26,11 @@ const Splash = ({navigation})=>{
 export default Splash;
 
 const styles = StyleSheet.create({
-    // container:{
-    //     flex:1,
-    //     alignItems: 'center',
-    //     justifyContent: 'center',
-    //     backgroundColor: '#307ecc'
-    // },
+    container:{
+        flex:1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     activityIndicator:{
         alignItems: 'center',
         height:80,

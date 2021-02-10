@@ -18,7 +18,8 @@ const Auth = () =>{
   )
 }
 
-const Navigator = ()=>{
+const Navigator = (props)=>{
+  console.log(props)
     return(
         <Stack.Navigator initialRouteName="SplashScreen">
           <Stack.Screen name="SplashScreen" component={Splash} options={{headerShown:false}}/>
