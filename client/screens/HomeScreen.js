@@ -4,7 +4,7 @@ import {Container, Button, Content, Form, Item, Input, Text} from 'native-base';
 import AsyncStorage from '@react-native-community/async-storage';
 import {useAuth, LOGOUT} from '../context/userContext';
 
-const Home = ({navigation}) => {
+const HomeScreen = ({navigation}) => {
   const {state,dispatch} = useAuth();
 
   const handleLogout = () => {
@@ -29,4 +29,4 @@ const Home = ({navigation}) => {
   );
 };
 
-export default Home;
+export default HomeScreen;
