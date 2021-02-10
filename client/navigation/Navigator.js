@@ -2,34 +2,29 @@ import React from 'react';
 
 import {createStackNavigator} from '@react-navigation/stack';
 
-import {useAuth} from '../context/userContext'
-
-import Login from '../pages/Login';
-import Home from '../pages/Home';
+import Splash from '../screens/Splash';
+import Login from '../screens/Login';
+import Home from '../screens/Home';
+import Register from '../screens/Register';
 
 const Stack = createStackNavigator();
 
-const Navigator = ()=>{
-    const {state} = useAuth();
+const Auth = () =>{
+  return(
+    <Stack.Navigator initialRouteName="LoginScreen">
+      <Stack.Screen name="LoginScreen" component={Login} options={{headerShown:false}}/>
+      <Stack.Screen name="RegisterScreen" component={Register} options={{headerShown:false}}/>
+    </Stack.Navigator>
+  )
+}
 
+const Navigator = ()=>{
     return(
-        <Stack.Navigator>
-            {state.access_token==="" ? (
-              <Stack.Screen
-              name="SignIn"
-              component={Login}
-              options={{
-                title: 'Sign in',
-                animationTypeForReplace: state.access_token==="" ? 'pop' : 'push',
-              }}
-            />
-            ) : (
-              <Stack.Screen
-                name="Home"
-                component={Home}
-              />
-            )}
-          </Stack.Navigator>
+        <Stack.Navigator initialRouteName="SplashScreen">
+          <Stack.Screen name="SplashScreen" component={Splash} options={{headerShown:false}}/>
+          <Stack.Screen name="Auth" component={Auth} options={{headerShown:false}}/>
+          <Stack.Screen name="Home" component={Home}/>
+        </Stack.Navigator>
     )
 }
 

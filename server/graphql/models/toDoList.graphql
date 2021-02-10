@@ -13,6 +13,12 @@ extend type Mutation @guard(with: ["api"]){
     updateToDoList(input: UpdateToDoListInput! @spread): ToDoList @update
 }
 
+extend type Query @guard(with:["api"]){
+    toDoList(
+        where: _ @whereConditions(columns: ["member_id"])
+    ):[ToDoList!]! @all
+}
+
 input CreateToDoListInput{
     familyMember: CreateFamilyMemberBelongsTo!
     name: String!

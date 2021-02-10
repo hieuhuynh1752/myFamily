@@ -2,16 +2,15 @@ import React from 'react';
 import { View } from 'react-native';
 import {Container, Button, Content, Form, Item, Input, Text} from 'native-base';
 import AsyncStorage from '@react-native-community/async-storage';
-import {useAuth} from '../context/userContext';
+import {useAuth, LOGOUT} from '../context/userContext';
 
-export const LOGOUT = "LOGOUT";
-
-const Home = () => {
+const Home = ({navigation}) => {
   const {state,dispatch} = useAuth();
 
   const handleLogout = () => {
     AsyncStorage.removeItem('@userInfo');
     dispatch({ type: LOGOUT });
+    navigation.replace('SplashScreen');
   };
 
   return (

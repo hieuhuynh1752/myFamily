@@ -18,6 +18,12 @@ extend type Mutation @guard(with: ["api"]) {
     createFamilyMember(input: CreateFamilyMemberInput! @spread): FamilyMember @create
 }
 
+extend type Query @guard(with:["api"]){
+    members(
+        where: _ @whereConditions(columns: ["family_id"])
+    ):[FamilyMember!]! @all
+}
+
 input CreateFamilyMemberInput{
     user: CreateUserBelongsTo
     family: CreateFamilyBelongsTo

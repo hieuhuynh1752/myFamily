@@ -19,6 +19,12 @@ extend type Mutation  @guard(with: ["api"]){
     updateEvent(input: UpdateEventInput! @spread): Event @update
 }
 
+extend type Query @guard(with:["api"]){
+    event(
+        where: _ @whereConditions(columns: ["member_id"])
+    ):[Event!]! @all
+}
+
 input CreateEventInput{
     familyMember: CreateFamilyMemberBelongsTo
     title: String!

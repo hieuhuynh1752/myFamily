@@ -15,6 +15,12 @@ extend type Mutation @guard(with: ["api"]) {
     updatePost(input: UpdatePostInput! @spread): Post @update
 }
 
+extend type Query @guard(with:["api"]){
+    post(
+        where: _ @whereConditions(columns: ["member_id"])
+    ):[Post!]! @all
+}
+
 input CreatePostInput{
     familyMember: CreateFamilyMemberBelongsTo!
     content: String!

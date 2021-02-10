@@ -7,11 +7,6 @@ const initialForms = {
     id: '',
     username: '',
     email: '',
-    role: {
-      name: '',
-      type: '',
-      description: '',
-    },
   },
 };
 
@@ -20,6 +15,7 @@ export const UserContext = createContext({...initialForms});
 /* TYPES */
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
+export const REGISTER = 'REGISTER';
 /* END */
 
 /* REDUCERS */
@@ -38,6 +34,14 @@ const reducer = (state, {type, payload}) => {
         user,
       };
     }
+    case REGISTER: {
+      const {access_token, user} = payload;
+      return {
+        ...state,
+        access_token,
+        user,
+      };
+    }
     default:
       //return state;
       throw new Error(`Unhandled action type: ${type}`);
@@ -48,7 +52,7 @@ const reducer = (state, {type, payload}) => {
 //let token=''
 
 export const UserContextProvider = (props) => {
-  const [state, dispatch] = useReducer(reducer, useContext(UserContext));
+  const [state, dispatch] = useReducer(reducer, useAuth());
 
   useEffect(() => {
     if (state.access_token !== '') {
@@ -57,12 +61,20 @@ export const UserContextProvider = (props) => {
   }, [state]);
 
   useEffect(() => {
-    AsyncStorage.getItem('@userInfo').then((savedState) => {
-      if (savedState.access_token !== undefined) {
-        dispatch({type: LOGIN, payload: savedState});
-      }
-    });
-  });
+    const getStorageItem = async () => {
+      let savedState = await AsyncStorage.getItem(
+        '@userInfo',
+        (error, value) => {
+          JSON.parse(value);
+        },
+      );
+      //console.log(savedState);
+         if (savedState!==null && savedState.access_token !== undefined) {
+           dispatch({type: LOGIN, payload: savedState});
+         }
+    };
+    getStorageItem();
+  }, []);
 
   return (
     <UserContext.Provider value={{state, dispatch}}>
