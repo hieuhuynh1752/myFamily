@@ -12,6 +12,7 @@ import Logo from '../components/Logo';
 import Header from '../components/Header';
 import Button from '../components/Button';
 import TextInput from '../components/TextInput';
+import Paragraph from '../components/Paragraph';
 
 import {theme} from '../core/theme';
 
@@ -23,8 +24,9 @@ const LoginScreen = ({navigation}) => {
     username: '',
     password: '',
   });
-  const [errorText, setErrorText] = useState({text: '', type: ''});
-
+  const [errorText, setErrorText] = useState('');
+  const [emailErrorText, setEmailErrorText] = useState('');
+  const [passwordErrorText, setPasswordErrorText] = useState('');
   const [requestLoginMutation, {loading: requestLoginLoading}] = useMutation(
     REQUEST_LOGIN,
     {
@@ -36,12 +38,14 @@ const LoginScreen = ({navigation}) => {
   );
 
   const handleUsernameChange = (event) => {
+    setEmailErrorText('');
     setAccountValues((previousState) => {
       return {...previousState, username: event};
     });
   };
 
   const handlePasswordChange = (event) => {
+    setPasswordErrorText('');
     setAccountValues((previousState) => {
       return {...previousState, password: event};
     });
@@ -51,19 +55,23 @@ const LoginScreen = ({navigation}) => {
     const emailError = emailValidator(accountValues.username);
     const passwordError = passwordValidator(accountValues.password);
     if (emailError) {
-      setErrorText({
-        text:emailError, type:'email'});
+      return setEmailErrorText(emailError);
     }
     if (passwordError) {
-      setErrorText({text:passwordError, type:'password'});
+      return setPasswordErrorText(passwordError);
     }
     try {
       await requestLoginMutation();
       console.log(accountValues);
-      navigation.navigate('Home');
+      navigation.navigate('Families');
     } catch (error) {
       console.log(error);
-      setErrorText({text:'Incorrect Username or Password! Please check again.', type:'account'});
+      setErrorText('Incorrect Username or Password! Please check again.');
+      setAccountValues((previousState)=>{
+        return{
+          ...previousState, password:''
+        }
+      })
     }
   };
 
@@ -73,14 +81,16 @@ const LoginScreen = ({navigation}) => {
       <Logo />
 
       <Header>Login</Header>
-
+        <Paragraph color={theme.colors.error}>
+          {errorText}
+        </Paragraph>
       <TextInput
         label="Email"
         returnKeyType="next"
         value={accountValues.username}
         onChangeText={handleUsernameChange}
-        error={errorText.type==='email'}
-        errorText={errorText.text}
+        error={emailErrorText !== ''}
+        errorText={emailErrorText}
         autoCapitalize="none"
         autoCompleteType="email"
         textContentType="emailAddress"
@@ -92,8 +102,8 @@ const LoginScreen = ({navigation}) => {
         returnKeyType="done"
         value={accountValues.password}
         onChangeText={handlePasswordChange}
-        error={errorText.type==='password'}
-        errorText={errorText.text}
+        error={passwordErrorText !== ''}
+        errorText={passwordErrorText}
         secureTextEntry
       />
 
@@ -105,7 +115,10 @@ const LoginScreen = ({navigation}) => {
         </TouchableOpacity>
       </View> */}
 
-      <Button mode="contained" onPress={requestLogin}>
+      <Button
+        mode="contained"
+        color={theme.colors.surface}
+        onPress={requestLogin}>
         Login
       </Button>
 

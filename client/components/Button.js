@@ -3,11 +3,11 @@ import { StyleSheet } from 'react-native';
 import { Button as PaperButton } from 'react-native-paper';
 import { theme } from '../core/theme';
 
-const Button = ({ mode, style, children, ...props }) => (
+const Button = ({ mode, style, color, children, ...props }) => (
   <PaperButton
     style={[
       styles.button,
-      mode === 'outlined' && { backgroundColor: theme.colors.surface },
+      mode === 'outlined' && { backgroundColor: color },
       style,
     ]}
     labelStyle={styles.text}

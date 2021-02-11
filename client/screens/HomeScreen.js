@@ -6,7 +6,7 @@ import {useAuth, LOGOUT} from '../context/userContext';
 
 const HomeScreen = ({navigation}) => {
   const {state,dispatch} = useAuth();
-
+  console.log(state);
   const handleLogout = () => {
     AsyncStorage.removeItem('@userInfo');
     dispatch({ type: LOGOUT });
@@ -19,6 +19,9 @@ const HomeScreen = ({navigation}) => {
         <View>
           <Text>{state.user.name}</Text>
           <Text>{state.user.email}</Text>
+          <Text>Family Id: {state.familyId}</Text>
+          <Text>Family Name: {state.familyName}</Text>
+          <Text>Family member Id: {state.memberId}</Text>
         </View>
 
         <Button full onPress={handleLogout}>

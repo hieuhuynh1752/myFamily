@@ -8,19 +8,30 @@ const initialForms = {
     username: '',
     email: '',
   },
+  familyId: 0,
+  familyName:'',
+  memberId:0,
+  role:''
 };
 
 export const UserContext = createContext({...initialForms});
 
 /* TYPES */
+//authorization types
 export const LOGIN = 'LOGIN';
+export const LOGIN_BY_CACHE = 'LOGIN_BY_CACHE';
 export const LOGOUT = 'LOGOUT';
 export const REGISTER = 'REGISTER';
+
+//usage types
+export const SELECT_FAMILY = 'SELECT_FAMILY';
+
 /* END */
 
 /* REDUCERS */
 const reducer = (state, {type, payload}) => {
   switch (type) {
+    //authentication cases
     case LOGOUT:
       return {
         ...state,
@@ -34,6 +45,18 @@ const reducer = (state, {type, payload}) => {
         user,
       };
     }
+    case LOGIN_BY_CACHE: {
+      const {access_token, user, familyId, familyName, memberId, role} = payload;
+      return {
+        ...state,
+        access_token,
+        user,
+        familyId,
+        familyName,
+        memberId,
+        role
+      };
+    }
     case REGISTER: {
       const {access_token, user} = payload;
       return {
@@ -42,14 +65,23 @@ const reducer = (state, {type, payload}) => {
         user,
       };
     }
+    //end of authentication cases
+
+    //usage case
+    case SELECT_FAMILY:{
+      return{
+        ...state,
+        familyId: parseInt(payload.family.id),
+        familyName: payload.family.name,
+        memberId: parseInt(payload.id),
+        role: payload.role,
+      }
+    }
     default:
-      //return state;
       throw new Error(`Unhandled action type: ${type}`);
   }
 };
 /* END */
-
-//let token=''
 
 export const UserContextProvider = (props) => {
   const [state, dispatch] = useReducer(reducer, useAuth());
@@ -68,9 +100,8 @@ export const UserContextProvider = (props) => {
           JSON.parse(value);
         },
       );
-      //console.log(savedState);
          if (savedState!==null && savedState.access_token !== undefined) {
-           dispatch({type: LOGIN, payload: savedState});
+           dispatch({type: LOGIN_BY_CACHE, payload: savedState});
          }
     };
     getStorageItem();

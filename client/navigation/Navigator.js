@@ -6,7 +6,8 @@ import {
   SplashScreen,
   LoginScreen,
   HomeScreen,
-  RegisterScreen
+  RegisterScreen,
+  FamiliesScreen
 } from '../screens';
 
 const Stack = createStackNavigator();
@@ -26,6 +27,7 @@ const Navigator = ()=>{
           <Stack.Screen name="SplashScreen" component={SplashScreen} options={{headerShown:false}}/>
           <Stack.Screen name="Auth" component={Auth} options={{headerShown:false}}/>
           <Stack.Screen name="Home" component={HomeScreen}/>
+          <Stack.Screen name="Families" component={FamiliesScreen} options={{headerShown:false}}/>
         </Stack.Navigator>
     )
 }
