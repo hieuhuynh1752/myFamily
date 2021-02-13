@@ -41,6 +41,7 @@ const client = new ApolloClient({
 //end of apollo-setup
 
 const App = () => {
+  console.log('render App');
   return (
     <ApolloProvider client={client}>
       <UserContextProvider>

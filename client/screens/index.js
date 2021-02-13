@@ -5,3 +5,6 @@ export { default as RegisterScreen } from './RegisterScreen';
 //export { default as Dashboard } from './Dashboard';
 export {default as SplashScreen} from './SplashScreen';
 export {default as FamiliesScreen} from './FamiliesScreen';
+export {default as PostScreen} from './PostScreen';
+export {default as CalendarScreen} from './CalendarScreen';
+export {default as ToDoScreen} from './ToDoScreen';

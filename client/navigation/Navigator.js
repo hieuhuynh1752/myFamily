@@ -7,29 +7,49 @@ import {
   LoginScreen,
   HomeScreen,
   RegisterScreen,
-  FamiliesScreen
+  FamiliesScreen,
 } from '../screens';
 
 const Stack = createStackNavigator();
 
-const Auth = () =>{
-  return(
+const Auth = () => {
+  return (
     <Stack.Navigator initialRouteName="LoginScreen">
-      <Stack.Screen name="LoginScreen" component={LoginScreen} options={{headerShown:false}}/>
-      <Stack.Screen name="RegisterScreen" component={RegisterScreen} options={{ title: '' ,headerTransparent:true}}/>
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Register"
+        component={RegisterScreen}
+        options={{title: '', headerTransparent: true}}
+      />
     </Stack.Navigator>
-  )
-}
+  );
+};
 
-const Navigator = ()=>{
-    return(
-        <Stack.Navigator initialRouteName="SplashScreen">
-          <Stack.Screen name="SplashScreen" component={SplashScreen} options={{headerShown:false}}/>
-          <Stack.Screen name="Auth" component={Auth} options={{headerShown:false}}/>
-          <Stack.Screen name="Home" component={HomeScreen}/>
-          <Stack.Screen name="Families" component={FamiliesScreen} options={{headerShown:false}}/>
-        </Stack.Navigator>
-    )
-}
+const Navigator = () => {
+  return (
+    <Stack.Navigator initialRouteName="SplashScreen">
+      <Stack.Screen
+        name="SplashScreen"
+        component={SplashScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Auth"
+        component={Auth}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen name="Home" component={HomeScreen} options={{headerShown: false}}/>
+      <Stack.Screen
+        name="Families"
+        component={FamiliesScreen}
+        options={{headerShown: false}}
+      />
+    </Stack.Navigator>
+  );
+};
 
-export default Navigator
+export default Navigator;

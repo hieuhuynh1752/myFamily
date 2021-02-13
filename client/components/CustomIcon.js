@@ -8,13 +8,6 @@ const CustomIcon = (props) => {
       <Icon
         name={props.name}
         size={props.size}
-        style={{
-          backgroundColor: `${props.bcolor}`,
-          color: `${props.color}`,
-          paddingLeft: props.pLeft,
-          borderRadius: props.rad,
-          padding: props.pad,
-        }}
       />
     </View>
   );
