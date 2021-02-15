@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 import {useAuth, LOGOUT} from '../context/userContext';
 
@@ -22,13 +22,20 @@ const HomeScreen = ({navigation}) => {
     navigation.replace('SplashScreen');
   };
 
+  useEffect(()=>{
+    navigation.addListener('beforeRemove',(e)=>{
+      e.preventDefault();
+    })
+  },[navigation])
+
   return (
     <Tab.Navigator initialRouteName="Post" tabBarOptions={{
       activeTintColor: theme.colors.background,
       labelStyle:{
         fontSize:16,
       },
-      activeBackgroundColor: theme.colors.primary 
+      activeBackgroundColor: theme.colors.primary,
+      keyboardHidesTabBar:true 
     }}>
       <Tab.Screen name="Post" component={PostScreen} options={{
         tabBarLabel: 'Post',

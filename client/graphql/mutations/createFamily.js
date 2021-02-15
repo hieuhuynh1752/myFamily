@@ -18,8 +18,11 @@ export const REQUEST_CREATE_FAMILY_MEMBER = gql`
       }){
           id
           family{
-              id
-              name
+              id,
+              name,
+              familyMember{
+                id
+              }
           }
           role
       }

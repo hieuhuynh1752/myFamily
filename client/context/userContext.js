@@ -11,6 +11,7 @@ const initialForms = {
   familyId: 0,
   familyName:'',
   memberId:0,
+  members:[],
   role:''
 };
 
@@ -46,7 +47,7 @@ const reducer = (state, {type, payload}) => {
       };
     }
     case LOGIN_BY_CACHE: {
-      const {access_token, user, familyId, familyName, memberId, role} = payload;
+      const {access_token, user, familyId, familyName, memberId,members, role} = payload;
       return {
         ...state,
         access_token,
@@ -54,6 +55,7 @@ const reducer = (state, {type, payload}) => {
         familyId,
         familyName,
         memberId,
+        members,
         role
       };
     }
@@ -74,6 +76,7 @@ const reducer = (state, {type, payload}) => {
         familyId: parseInt(payload.family.id),
         familyName: payload.family.name,
         memberId: parseInt(payload.id),
+        members: payload.family.familyMember,
         role: payload.role,
       }
     }

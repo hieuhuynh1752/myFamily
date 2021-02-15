@@ -6,7 +6,10 @@ query families($userid: Mixed){
       id,
       family{
         id,
-        name
+        name,
+        familyMember{
+          id
+        }
       },
       role
     }

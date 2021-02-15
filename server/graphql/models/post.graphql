@@ -16,8 +16,9 @@ extend type Mutation @guard(with: ["api"]) {
 }
 
 extend type Query @guard(with:["api"]){
-    post(
-        where: _ @whereConditions(columns: ["member_id"])
+    posts(
+        where: _ @whereConditions(columns: ["member_id"]),
+        order: _ @orderBy(columns: ["created_at"])
     ):[Post!]! @all
 }
 

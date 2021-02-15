@@ -2,7 +2,7 @@ import React from 'react';
 import {ApolloClient, InMemoryCache, from, HttpLink} from '@apollo/client';
 import {ApolloProvider} from '@apollo/client';
 import {setContext} from '@apollo/client/link/context';
-
+import Feather from 'react-native-vector-icons/Feather'
 import {getToken} from './core/authenSetup';
 import {onError} from '@apollo/client/link/error';
 import {UserContextProvider} from './context/userContext';
@@ -45,7 +45,7 @@ const App = () => {
   return (
     <ApolloProvider client={client}>
       <UserContextProvider>
-        <PaperProvider theme={theme}>
+        <PaperProvider theme={theme} settings={{icon:props=><Feather{...props}/>}}>
           <NavigationContainer theme={theme}>
             <Navigator />
           </NavigationContainer>
