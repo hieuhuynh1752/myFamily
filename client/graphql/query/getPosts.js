@@ -16,7 +16,9 @@ export const REQUEST_GET_POSTS = gql`
       }
       content
       like{
+        id
         familyMember{
+          id
           user{
             id,
             name

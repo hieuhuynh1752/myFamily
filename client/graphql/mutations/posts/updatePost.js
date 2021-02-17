@@ -13,7 +13,9 @@ export const REQUEST_UPDATE_POST = gql`
       }
       content
       like{
+        id
         familyMember{
+          id
           user{
             id,
             name

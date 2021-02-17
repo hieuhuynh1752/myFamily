@@ -14,11 +14,10 @@ import Icon from 'react-native-vector-icons/Feather';
 import {theme} from '../core/theme';
 
 //import graphql queries, mutations & fragments
-import {useQuery, useMutation} from '@apollo/client';
-import {REQUEST_GET_POSTS} from '../graphql/query/getPosts';
-import {REQUEST_CREATE_POST} from '../graphql/mutations/posts/createPost';
+import {useMutation} from '@apollo/client';
 import {REQUEST_UPDATE_POST} from '../graphql/mutations/posts/updatePost';
 import {REQUEST_DELETE_POST} from '../graphql/mutations/posts/deletePost';
+
 import {REQUEST_CREATE_COMMENT} from '../graphql/mutations/posts/createComment';
 import {REQUEST_DELETE_COMMENT} from '../graphql/mutations/posts/deleteComment';
 import {REQUEST_CREATE_LIKE} from '../graphql/mutations/posts/createLike';
@@ -32,62 +31,15 @@ import {
 
 //import user context
 import {useAuth} from '../context/userContext';
+import BackButton from '../components/BackButton';
 
-const PostScreen = ({navigation}) => {
+const PostDetailsScreen = ({route,navigation}) => {
   const {state} = useAuth();
-  const [newPost, setNewPost] = useState({
-    memberid: state.memberId,
-    content: '',
-  });
-
-  const memberIds = state.members.map((member) => member.id);
-
-  //TODO: write update cache and debug
-  const [
-    requestCreatePostMutation,
-    {loading: requestCreatePostLoading},
-  ] = useMutation(REQUEST_CREATE_POST, {
-    update(cache, {data: {createPost}}) {
-      cache.modify({
-        fields: {
-          posts(existingPosts = []) {
-            const newPostRef = cache.writeFragment({
-              data: createPost,
-              fragment: POSTS_FRAGMENT,
-            });
-            console.log(newPostRef);
-            return [newPostRef, ...existingPosts];
-          },
-        },
-      });
-    },
-    variables: newPost,
-  });
-
-  const requestCreatePost = async () => {
-    try {
-      await requestCreatePostMutation();
-      setNewPost((previousState) => {
-        return {
-          ...previousState,
-          content: '',
-        };
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const GetPosts = () => {
-    const {loading, error, data} = useQuery(REQUEST_GET_POSTS, {
-      variables: {membersid: memberIds},
-    });
-    if (loading) return <Loader loading={loading} />;
-    if (error) return null;
-
+  const {post} = route.params;
+  const GetPost = () => {
     const LikeButton = ({like, postId, post}) => {
       const [isLiked, setIsLiked] = useState(false);
-      const [likeId, setLikeId] = useState(0);
+      const [likeId,setLikeId] = useState(0);
       const [requestCreateLikeMutation] = useMutation(REQUEST_CREATE_LIKE, {
         update(cache, {data: {createLike}}) {
           setLikeId(parseInt(createLike.id));
@@ -154,11 +106,7 @@ const PostScreen = ({navigation}) => {
           like.find((like) => like.familyMember.id == state.memberId) !==
           undefined
         ) {
-          setLikeId(
-            parseInt(
-              like.find((like) => like.familyMember.id == state.memberId).id,
-            ),
-          );
+          setLikeId(parseInt(like.find((like) => like.familyMember.id == state.memberId).id));
           setIsLiked(true);
         }
       }, [like]);
@@ -350,7 +298,7 @@ const PostScreen = ({navigation}) => {
           </>
         );
     };
-    return data.posts.map((post) => (
+    return (
       <Card key={post.id} style={styles.container}>
         <Card.Title
           title={post.familyMember.user.name}
@@ -371,18 +319,14 @@ const PostScreen = ({navigation}) => {
           <Divider style={{width: 1, height: '100%'}} />
           <Button
             style={{width: '50%'}}
-            onPress={() => {
-              navigation.navigate('PostDetails', {
-                post: post,
-              });
-            }}
+            onPress={() => {}}
             color={theme.colors.text}>
             <Icon name="message-circle" size={20} color={theme.colors.text} />{' '}
             Comment
           </Button>
         </Card.Actions>
       </Card>
-    ));
+    );
   };
 
   const handlePostChange = (event) => {
@@ -396,29 +340,9 @@ const PostScreen = ({navigation}) => {
       source={require('../assets/background_dot.png')}
       resizeMode="repeat"
       style={{flex: 1, width: '100%', backgroundColor: theme.colors.secondary}}>
+      <BackButton goBack={()=>navigation.navigate('PostScreen')}/>
       <ScrollView>
-        <Card style={styles.container}>
-          <Card.Content>
-            <CreatePostInput
-              value={newPost.content}
-              onChangeText={handlePostChange}
-            />
-
-            <Button
-              mode="contained"
-              style={{
-                width: '50%',
-                backgroundColor: theme.colors.accent,
-                alignSelf: 'flex-end',
-              }}
-              disabled={newPost.content === '' ? true : false}
-              loading={requestCreatePostLoading}
-              onPress={requestCreatePost}>
-              Create
-            </Button>
-          </Card.Content>
-        </Card>
-        <GetPosts />
+        <GetPost />
       </ScrollView>
     </ImageBackground>
   );
@@ -433,4 +357,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PostScreen;
+export default PostDetailsScreen;

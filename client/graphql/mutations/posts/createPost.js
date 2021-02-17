@@ -13,7 +13,9 @@ export const REQUEST_CREATE_POST = gql`
       }
       content
       like{
+        id
         familyMember{
+        id
           user{
             id,
             name

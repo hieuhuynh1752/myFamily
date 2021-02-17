@@ -12,7 +12,9 @@ export const POSTS_FRAGMENT = gql`
     }
     content
     like {
+      id
       familyMember {
+        id
         user {
           id
           name
@@ -33,5 +35,33 @@ export const POSTS_FRAGMENT = gql`
     }
     created_at
     updated_at
+  }
+`;
+
+export const NEW_LIKE_FRAGMENT = gql`
+  fragment NewLike on Like {
+    id
+    familyMember {
+      id
+      user {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const NEW_COMMENT_FRAGMENT = gql`
+  fragment NewComment on Comment {
+    id
+    content
+    created_at
+    familyMember {
+      id
+      user {
+        id
+        name
+      }
+    }
   }
 `;
