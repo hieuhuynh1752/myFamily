@@ -69,7 +69,6 @@ const BottomTabs = ({navigation}) => {
 };
 const HomeScreen = ({navigation}) => {
   const {state, dispatch} = useAuth();
-  console.log('render Home component');
   const handleLogout = () => {
     AsyncStorage.removeItem('@userInfo');
     dispatch({type: LOGOUT});

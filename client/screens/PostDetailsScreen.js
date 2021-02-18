@@ -4,8 +4,8 @@ import React, {useState, useEffect} from 'react';
 import Loader from '../components/Loader';
 import Paragraph from '../components/Paragraph';
 import CreatePostInput from '../components/CreatePostInput';
-import {Button, Menu} from 'react-native-paper';
-import {ImageBackground, StyleSheet, ScrollView} from 'react-native';
+import {IconButton, Button, Menu, TextInput} from 'react-native-paper';
+import {ImageBackground, StyleSheet, ScrollView, Keyboard} from 'react-native';
 import {Portal, Modal, Card, Divider} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
 //end of UI components imports
@@ -33,13 +33,129 @@ import {
 import {useAuth} from '../context/userContext';
 import BackButton from '../components/BackButton';
 
-const PostDetailsScreen = ({route,navigation}) => {
+const PostDetailsScreen = ({route, navigation}) => {
   const {state} = useAuth();
   const {post} = route.params;
+
+  const [comments, setComments] = useState(post.comment);
+
+  const CommentList = () => {
+    const CommentButton = ({commentId, memberId}) => {
+      if (state.role !== 'Admin' && memberId !== state.memberId) return null;
+      const [requestDeleteComment] = useMutation(REQUEST_DELETE_COMMENT, {
+        update(cache, {data: {deleteComment}}) {
+          cache.modify({
+            id: cache.identify(post),
+            fields: {
+              comment(existingComments = [], {readField}) {
+                const newComments = existingComments.filter(
+                  (commentRef) =>
+                    readField('id', commentRef) !== deleteComment.id,
+                );
+                
+                setComments(comments.filter((comment)=> comment.id !== deleteComment.id));
+                return newComments;
+              },
+            },
+          });
+        },
+      });
+      return (
+        <Button
+          mode="text"
+          onPress={() => {
+            requestDeleteComment({variables: {commentid: parseInt(commentId)}});
+          }}>
+          <Icon name="trash-2" size={20} color={theme.colors.error} />
+        </Button>
+      );
+    };
+
+    return (
+      <>
+        {comments.map((comment) => (
+          <Card key={comment.id} style={{marginVertical: 4}}>
+            <Divider />
+            <Card>
+              <Card.Title
+                title={comment.familyMember.user.name}
+                titleStyle={{fontSize: 16}}
+                right={() => (
+                  <CommentButton
+                    commentId={comment.id}
+                    memberId={comment.familyMember.id}
+                  />
+                )}
+              />
+              <Card.Content>
+                <Paragraph>{comment.content}</Paragraph>
+              </Card.Content>
+            </Card>
+          </Card>
+        ))}
+      </>
+    );
+  };
+
+  const CommentSection = () => {
+    const [newComment, setNewComment] = useState('');
+
+    const [requestCreateCommentMutation] = useMutation(REQUEST_CREATE_COMMENT, {
+      update(cache, {data: {createComment}}) {
+        cache.modify({
+          id: cache.identify(post),
+          fields: {
+            comment(existingComments = [], {readField}) {
+              const newCommentRef = cache.writeFragment({
+                data: createComment,
+                fragment: NEW_COMMENT_FRAGMENT,
+              });
+              setComments((previousState) => {
+                return [...previousState, createComment];
+              });
+              return [...existingComments, newCommentRef];
+            },
+          },
+        });
+      },
+    });
+
+    return (
+      <Card>
+        <Card.Actions>
+          <TextInput
+            style={{width: '85%', height: 48}}
+            value={newComment}
+            onChangeText={setNewComment}
+          />
+          <IconButton
+            style={{width: '15%'}}
+            icon="send"
+            disabled={newComment === ''}
+            size={25}
+            onPress={() => {
+              requestCreateCommentMutation({
+                variables: {
+                  memberid: state.memberId,
+                  postid: post.id,
+                  content: newComment,
+                },
+              });
+              setNewComment('');
+              Keyboard.dismiss();
+            }}
+            color={theme.colors.primary}
+          />
+        </Card.Actions>
+      </Card>
+    );
+  };
+
   const GetPost = () => {
     const LikeButton = ({like, postId, post}) => {
       const [isLiked, setIsLiked] = useState(false);
-      const [likeId,setLikeId] = useState(0);
+      const [likeId, setLikeId] = useState(0);
+
       const [requestCreateLikeMutation] = useMutation(REQUEST_CREATE_LIKE, {
         update(cache, {data: {createLike}}) {
           setLikeId(parseInt(createLike.id));
@@ -106,7 +222,11 @@ const PostDetailsScreen = ({route,navigation}) => {
           like.find((like) => like.familyMember.id == state.memberId) !==
           undefined
         ) {
-          setLikeId(parseInt(like.find((like) => like.familyMember.id == state.memberId).id));
+          setLikeId(
+            parseInt(
+              like.find((like) => like.familyMember.id == state.memberId).id,
+            ),
+          );
           setIsLiked(true);
         }
       }, [like]);
@@ -158,7 +278,6 @@ const PostDetailsScreen = ({route,navigation}) => {
                 const newPosts = existingPosts.filter(
                   (postRef) => readField('id', postRef) !== deletePost.id,
                 );
-                console.log(newPosts);
                 return newPosts;
               },
             },
@@ -325,14 +444,12 @@ const PostDetailsScreen = ({route,navigation}) => {
             Comment
           </Button>
         </Card.Actions>
+        <Divider style={{height: 2}} />
+        <Card.Content style={{marginTop: 15}}>
+          <CommentList />
+        </Card.Content>
       </Card>
     );
-  };
-
-  const handlePostChange = (event) => {
-    setNewPost((previousState) => {
-      return {...previousState, content: event};
-    });
   };
 
   return (
@@ -340,10 +457,11 @@ const PostDetailsScreen = ({route,navigation}) => {
       source={require('../assets/background_dot.png')}
       resizeMode="repeat"
       style={{flex: 1, width: '100%', backgroundColor: theme.colors.secondary}}>
-      <BackButton goBack={()=>navigation.navigate('PostScreen')}/>
+      <BackButton goBack={() => navigation.navigate('PostScreen')} />
       <ScrollView>
         <GetPost />
       </ScrollView>
+      <CommentSection />
     </ImageBackground>
   );
 };

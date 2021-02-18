@@ -62,7 +62,6 @@ const LoginScreen = ({navigation}) => {
     }
     try {
       await requestLoginMutation();
-      console.log(accountValues);
       navigation.navigate('Families');
     } catch (error) {
       console.log(error);

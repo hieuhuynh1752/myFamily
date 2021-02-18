@@ -55,7 +55,6 @@ const PostScreen = ({navigation}) => {
               data: createPost,
               fragment: POSTS_FRAGMENT,
             });
-            console.log(newPostRef);
             return [newPostRef, ...existingPosts];
           },
         },
@@ -175,10 +174,7 @@ const PostScreen = ({navigation}) => {
         id: parseInt(postId),
         content: content,
       });
-      const [deletePostId] = useState({
-        id: parseInt(postId),
-      });
-
+      
       const openMenu = () => setVisible(true);
       const closeMenu = () => setVisible(false);
       const openEdit = () => setEditVisible(true);
@@ -210,13 +206,14 @@ const PostScreen = ({navigation}) => {
                 const newPosts = existingPosts.filter(
                   (postRef) => readField('id', postRef) !== deletePost.id,
                 );
-                console.log(newPosts);
                 return newPosts;
               },
             },
           });
         },
-        variables: deletePostId,
+        variables: {
+          id: parseInt(postId),
+        },
       });
 
       const requestUpdatePost = async () => {
@@ -236,8 +233,6 @@ const PostScreen = ({navigation}) => {
           console.log(error);
         }
       };
-
-      if (memberId === state.memberId || state.role === 'Admin')
         return (
           <>
             <Menu
