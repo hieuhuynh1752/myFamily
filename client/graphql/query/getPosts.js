@@ -2,10 +2,10 @@ import gql from 'graphql-tag';
 
 export const REQUEST_GET_POSTS = gql`
   query posts($membersid: Mixed) {
-    posts(where: {column: MEMBER_ID, operator: IN, value: $membersid},order:[{
-        column: CREATED_AT,
-        order:DESC
-      }]) {
+    posts(
+      where: {column: MEMBER_ID, operator: IN, value: $membersid}
+      order: [{column: CREATED_AT, order: DESC}]
+    ) {
       id
       familyMember {
         id
@@ -15,12 +15,12 @@ export const REQUEST_GET_POSTS = gql`
         }
       }
       content
-      like{
+      like {
         id
-        familyMember{
+        familyMember {
           id
-          user{
-            id,
+          user {
+            id
             name
           }
         }
