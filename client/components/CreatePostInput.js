@@ -18,20 +18,9 @@ const CreatePostInput = ({...props}) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    width: '90%',
-    alignSelf: 'center',
-    elevation: 4,
-},
 input: {
     backgroundColor: theme.colors.surface,
     marginBottom: 16,
-  },
-  error: {
-    fontSize: 14,
-    color: theme.colors.error,
-    paddingHorizontal: 4,
-    paddingTop: 4,
   },
 });
 

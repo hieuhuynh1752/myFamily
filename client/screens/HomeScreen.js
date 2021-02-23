@@ -10,6 +10,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import PostScreen from './PostScreen';
 import PostDetailsScreen from './PostDetailsScreen';
 import CalendarScreen from './CalendarScreen';
+import CreateEventScreen from './CreateEventScreen';
 import ToDoScreen from './ToDoScreen';
 
 const Tab = createBottomTabNavigator();
@@ -27,11 +28,10 @@ const BottomTabs = ({navigation}) => {
     <Tab.Navigator
       initialRouteName="Post"
       tabBarOptions={{
-        activeTintColor: theme.colors.background,
+        activeTintColor: theme.colors.primary,
         labelStyle: {
           fontSize: 16,
         },
-        activeBackgroundColor: theme.colors.primary,
         keyboardHidesTabBar: true,
       }}>
       <Tab.Screen
@@ -86,6 +86,11 @@ const HomeScreen = ({navigation}) => {
         name="PostDetails"
         component={PostDetailsScreen}
         options={{title: ''}}
+      />
+      <HomeStack.Screen
+        name="CreateEvent"
+        component={CreateEventScreen}
+        options={{headerShown: false}}
       />
     </HomeStack.Navigator>
   );
