@@ -41,8 +41,7 @@ const PostScreen = ({navigation}) => {
   });
 
   const memberIds = state.members.map((member) => member.id);
-
-  //TODO: write update cache and debug
+    
   const [
     requestCreatePostMutation,
     {loading: requestCreatePostLoading},

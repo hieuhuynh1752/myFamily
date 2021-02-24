@@ -16,6 +16,7 @@ const CalendarScreen = ({navigation}) => {
     '2021-02-23': [{name: 'item 2 - any js object', height: 80}],
     '2021-02-24': [],
     '2021-02-25': [{name: 'item 3 - any js object'}, {name: 'any js object'}],
+    '2021-02-22': [{name: 'item 4 - any js object'}],
   });
 
   const loadItems = (day) => {};
@@ -56,14 +57,16 @@ const CalendarScreen = ({navigation}) => {
           size={28}
         />
       </Appbar.Header>
-      {/* <View style={{flex: 1}}>
+      <View style={{flex: 1}}>
         <Agenda
           items={items}
           selected={'2021-02-19'}
           renderItem={renderItem}
           minDate={'2018-05-10'}
+          pastScrollRange={5}
+          futureScrollRange={5}
         />
-      </View> */}
+      </View>
     </>
   );
 };
