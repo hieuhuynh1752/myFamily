@@ -17,12 +17,13 @@ class CreateEventsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('member_id');
             $table->string('title');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->dateTime('start_date_time');
             $table->dateTime('end_date_time');
-            $table->string('color');
+            $table->string('color')->nullable();
             $table->string('recurrence')->nullable();
-            $table->unsignedBigInteger('event_id')->nullable();
+            $table->string('location')->nullable();
+            $table->string('participants_id')->nullable();
             $table->string('reminder');
             $table->timestamps();
             $table->foreign('member_id')->references('id')->on('family_members')->onDelete('cascade');

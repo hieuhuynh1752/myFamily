@@ -12,6 +12,7 @@ import {REQUEST_REGISTER} from '../graphql/mutations/authentication/register';
 import {useAuth,REGISTER} from '../context/userContext';
 import Loader from '../components/Loader';
 import {emailValidator, passwordValidator, nameValidator} from '../core/utils';
+import Paragraph from '../components/Paragraph';
 const RegisterScreen = ({navigation}) => {
   const {state, dispatch} = useAuth();
     
@@ -22,7 +23,11 @@ const RegisterScreen = ({navigation}) => {
     password_confirmation:''
   });
 
-  const [errorText, setErrorText] = useState({text: '', type: ''});
+  const [errorText, setErrorText] = useState('');
+  const [emailErrorText, setEmailErrorText] = useState('')
+  const [nameErrorText, setNameErrorText] = useState('')
+  const [passwordErrorText, setPasswordErrorText] = useState('')
+  const [passwordConfirmErrorText, setPasswordConfirmErrorText] = useState('')
 
   const [requestRegisterMutation, {loading: requestRegisterLoading}] = useMutation(
     REQUEST_REGISTER,
@@ -60,30 +65,27 @@ const RegisterScreen = ({navigation}) => {
 
   const requestRegister = async () => {
     const nameError = nameValidator(accountValues.name);
-    const emailError = emailValidator(accountValues.username);
+    const emailError = emailValidator(accountValues.email);
     const passwordError = passwordValidator(accountValues.password);
     
     if(nameError){
-      setErrorText({
-        text:nameError, type:'name'
-      })
+      return setNameErrorText(nameError);
     }
     if (emailError) {
-      setErrorText({
-        text:emailError, type:'email'});
+      return setEmailErrorText(emailError);
     }
     if (passwordError) {
-      setErrorText({text:passwordError, type:'password'});
+      return setPasswordErrorText(passwordError);
     }
     if (accountValues.password_confirmation!==accountValues.password) {
-      setErrorText({text:'Oops, your Password & Password Confirm are not the same!', type:'password_confirm'});
+      return setPasswordConfirmText('Oops, your Password & Password Confirm are not the same!');
     }
     try {
       await requestRegisterMutation();
-      navigation.navigate('Home');
+      navigation.navigate('Families');
     } catch (error) {
       console.log(error.message);
-      setErrorText({text:'This account has been registered before.', type:'account_exist'});
+      setErrorText('Sorry! This account has been registered before.');
     }
   };
 
@@ -95,14 +97,16 @@ const RegisterScreen = ({navigation}) => {
       <Logo />
 
       <Header>Create Account</Header>
-
+      <Paragraph color={theme.colors.error}>
+          {errorText}
+        </Paragraph>
       <TextInput
         label="Name"
         returnKeyType="next"
         value={accountValues.name}
         onChangeText={handleUsernameChange}
-        error={errorText.type==='name'}
-        errorText={errorText.text}
+        error={nameErrorText!==''}
+        errorText={nameErrorText}
       />
 
       <TextInput
@@ -110,8 +114,8 @@ const RegisterScreen = ({navigation}) => {
         returnKeyType="next"
         value={accountValues.email}
         onChangeText={handleEmailChange}
-        error={errorText.type==='email'}
-        errorText={errorText.text}
+        error={emailErrorText!==''}
+        errorText={emailErrorText}
         autoCapitalize="none"
         autoCompleteType="email"
         textContentType="emailAddress"
@@ -122,8 +126,8 @@ const RegisterScreen = ({navigation}) => {
         returnKeyType="next"
         value={accountValues.password}
         onChangeText={handlePasswordChange}
-        error={errorText.type==='password'}
-        errorText={errorText.text}
+        error={passwordErrorText!==''}
+        errorText={passwordErrorText}
         secureTextEntry
       />
       <TextInput
@@ -131,8 +135,8 @@ const RegisterScreen = ({navigation}) => {
         returnKeyType="done"
         value={accountValues.password_confirmation}
         onChangeText={handlePasswordConfirmChange}
-        error={errorText.type==='password_confirm'}
-        errorText={errorText.text}
+        error={passwordConfirmErrorText!==''}
+        errorText={passwordConfirmErrorText}
         secureTextEntry
       />
 
