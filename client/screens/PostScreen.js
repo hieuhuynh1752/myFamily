@@ -349,7 +349,7 @@ const PostScreen = ({navigation}) => {
       <Card key={post.id} style={styles.container}>
         <Card.Title
           title={post.familyMember.user.name}
-          subtitle={post.created_at}
+          subtitle={(new Date(post.created_at.replace(/\s/g, 'T'))).toString().slice(0,21)}
           right={() => (
             <ActionButtons
               memberId={post.familyMember.id}
