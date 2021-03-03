@@ -19,8 +19,6 @@ import {REQUEST_GET_POSTS} from '../graphql/query/getPosts';
 import {REQUEST_CREATE_POST} from '../graphql/mutations/posts/createPost';
 import {REQUEST_UPDATE_POST} from '../graphql/mutations/posts/updatePost';
 import {REQUEST_DELETE_POST} from '../graphql/mutations/posts/deletePost';
-import {REQUEST_CREATE_COMMENT} from '../graphql/mutations/posts/createComment';
-import {REQUEST_DELETE_COMMENT} from '../graphql/mutations/posts/deleteComment';
 import {REQUEST_CREATE_LIKE} from '../graphql/mutations/posts/createLike';
 import {REQUEST_DELETE_LIKE} from '../graphql/mutations/posts/deleteLike';
 import {

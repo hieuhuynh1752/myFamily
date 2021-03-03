@@ -10,6 +10,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import PostScreen from './PostScreen';
 import PostDetailsScreen from './PostDetailsScreen';
 import CalendarScreen from './CalendarScreen';
+import EventDetailsScreen from './EventDetailsScreen';
 import CreateEventScreen from './CreateEventScreen';
 import ToDoScreen from './ToDoScreen';
 
@@ -90,6 +91,11 @@ const HomeScreen = ({navigation}) => {
       <HomeStack.Screen
         name="CreateEvent"
         component={CreateEventScreen}
+        options={{headerShown: false}}
+      />
+      <HomeStack.Screen
+        name="EventDetails"
+        component={EventDetailsScreen}
         options={{headerShown: false}}
       />
     </HomeStack.Navigator>

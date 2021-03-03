@@ -21,7 +21,7 @@ extend type Mutation  @guard(with: ["api"]){
 }
 
 extend type Query @guard(with:["api"]){
-    event(
+    events(
         where: _ @whereConditions(columns: ["member_id"])
     ):[Event!]! @all
 }

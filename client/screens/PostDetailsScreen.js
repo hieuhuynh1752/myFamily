@@ -23,7 +23,6 @@ import {REQUEST_DELETE_COMMENT} from '../graphql/mutations/posts/deleteComment';
 import {REQUEST_CREATE_LIKE} from '../graphql/mutations/posts/createLike';
 import {REQUEST_DELETE_LIKE} from '../graphql/mutations/posts/deleteLike';
 import {
-  POSTS_FRAGMENT,
   NEW_LIKE_FRAGMENT,
   NEW_COMMENT_FRAGMENT,
 } from '../graphql/fragments/postsFragment';
@@ -37,6 +36,7 @@ const PostDetailsScreen = ({route, navigation}) => {
   const {state} = useAuth();
   const {post} = route.params;
 
+  const [content, setContent] = useState(post.content);
   const [comments, setComments] = useState(post.comment);
 
   const CommentList = () => {
@@ -289,6 +289,7 @@ const PostDetailsScreen = ({route, navigation}) => {
       const requestUpdatePost = async () => {
         try {
           await requestUpdatePostMutation();
+          setContent(editPost.content);
           closeEdit();
         } catch (error) {
           console.log(error);
@@ -426,11 +427,11 @@ const PostDetailsScreen = ({route, navigation}) => {
             <ActionButtons
               memberId={post.familyMember.id}
               postId={post.id}
-              content={post.content}
+              content={content}
             />
           )}></Card.Title>
         <Card.Content style={{marginBottom: 15}}>
-          <Paragraph>{post.content}</Paragraph>
+          <Paragraph>{content}</Paragraph>
         </Card.Content>
         <Divider style={{height: 2}} />
         <Card.Actions>

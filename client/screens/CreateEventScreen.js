@@ -24,18 +24,26 @@ import {useMutation} from '@apollo/client';
 import {REQUEST_CREATE_EVENT} from '../graphql/mutations/events/createEvent';
 import {EVENTS_FRAGMENT} from '../graphql/fragments/eventsFragment';
 
+import Loader from '../components/Loader';
+
 const CreateEventScreen = ({navigation}) => {
   const {state} = useAuth();
-
+  console.log(new Date("2021-03-02T04:45:35"));
   const [eventTitle, setEventTitle] = useState('');
 
   const [eventDescription, setEventDescription] = useState('');
 
   const [eventLocation, setEventLocation] = useState('');
 
+  const [eventColor, setEventColor] = useState(theme.colors.border);
+
+  const [eventColorText, setEventColorText] = useState("");
+
   const [selectedMembers, setSelectedMembers] = useState(state.members);
 
   const [selectedMembersIds, setSelectedMembersIds] = useState([]);
+
+  const [recurrence, setRecurrence] = useState('Never');
 
   const [startDate, setStartDate] = useState(new Date());
   const [startTime, setStartTime] = useState(new Date());
@@ -47,15 +55,17 @@ const CreateEventScreen = ({navigation}) => {
   const [showEndDate, setShowEndDate] = useState(false);
   const [showEndTime, setShowEndTime] = useState(false);
 
-  const [recurrence, setRecurrence] = useState('Never');
+  const [showColorMenu, setShowColorMenu] = useState(false);
 
   const [showRecurrenceMenu, setShowRecurrenceMenu] = useState(false);
 
   const [isAbleToSubmit, setIsAbleToSubmit] = useState(false);
 
   const openRecurrenceMenu = () => setShowRecurrenceMenu(true);
-
   const closeRecurrenceMenu = () => setShowRecurrenceMenu(false);
+
+  const openColorMenu = () => setShowColorMenu(true);
+  const closeColorMenu = () => setShowColorMenu(false);
 
   const handleEventTitleChange = (event) => {
     setEventTitle(event);
@@ -85,6 +95,7 @@ const CreateEventScreen = ({navigation}) => {
 
   const onEndDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || endDate;
+    //console.log(currentDate);
     setShowEndDate(false);
     setEndDate(currentDate);
     setEndTime(currentDate);
@@ -93,6 +104,7 @@ const CreateEventScreen = ({navigation}) => {
   const onEndTimeChange = (event, selectedTime) => {
     const currentTime = selectedTime || startTime;
     setShowEndTime(false);
+    //console.log(currentTime);
     console.log(currentTime);
     setEndTime(currentTime);
   };
@@ -129,16 +141,16 @@ const CreateEventScreen = ({navigation}) => {
     );
   };
 
-  handleSubmitCreateEvent = async () => {
+  const handleSubmitCreateEvent = async () => {
     const startDateTime =
       startDate.toISOString().slice(0, 10) +
       ' ' +
-      startTime.toISOString().slice(11, 19);
+      startTime.toISOString().slice(11,19);
 
     const endDateTime =
       endDate.toISOString().slice(0, 10) +
       ' ' +
-      endTime.toISOString().slice(11, 19);
+      endTime.toISOString().slice(11,19);
     try {
       await requestCreateEventMutation({
         variables: {
@@ -147,13 +159,14 @@ const CreateEventScreen = ({navigation}) => {
           description: eventDescription,
           start_date_time: startDateTime,
           end_date_time: endDateTime,
-          color: '',
+          color: eventColor,
           recurrence,
           location: eventLocation,
           participants_id: selectedMembersIds.toString(),
           reminder: 'null',
         },
       });
+      navigation.navigate('Calendar');
     } catch (error) {
       console.log(error);
     }
@@ -164,17 +177,17 @@ const CreateEventScreen = ({navigation}) => {
     {loading: requestCreateEventLoading},
   ] = useMutation(REQUEST_CREATE_EVENT, {
     update(cache, {data: {createEvent}}) {
-      // cache.modify({
-      //   fields: {
-      //     events(existingEvents = []) {
-      //       const newEventRef = cache.writeFragment({
-      //         data: createEvent,
-      //         fragment: EVENTS_FRAGMENT,
-      //       });
-      //       return [...existingEvents, newEventRef];
-      //     },
-      //   },
-      // });
+      cache.modify({
+        fields: {
+          events(existingEvents = []) {
+            const newEventRef = cache.writeFragment({
+              data: createEvent,
+              fragment: EVENTS_FRAGMENT,
+            });
+            return [...existingEvents, newEventRef];
+          },
+        },
+      });
     },
   });
 
@@ -245,6 +258,7 @@ const CreateEventScreen = ({navigation}) => {
       source={require('../assets/background_dot.png')}
       resizeMode="repeat"
       style={{flex: 1, width: '100%', backgroundColor: theme.colors.accent}}>
+      <Loader loading={requestCreateEventLoading} />
       <Appbar.Header style={{backgroundColor: theme.colors.card}}>
         <Appbar.Action
           icon="arrow-left"
@@ -262,7 +276,6 @@ const CreateEventScreen = ({navigation}) => {
           onPress={() => {
             handleSubmitCreateEvent();
           }}
-          size={28}
         />
       </Appbar.Header>
       <ScrollView>
@@ -297,26 +310,28 @@ const CreateEventScreen = ({navigation}) => {
           <Card.Content>
             <View style={styles.row}>
               <Button
+                icon="calendar"
                 mode="outlined"
                 color={theme.colors.text}
                 onPress={showStartDatePicker}
                 style={{
-                  width: '75%',
+                  width: '61%',
                   margin: 4,
                   backgroundColor: theme.colors.border,
                 }}>
-                {startDate.toUTCString().slice(0, 16)}
+                {startDate.toUTCString().slice(0,16)}
               </Button>
               <Button
+                icon="clock"
                 mode="outlined"
                 color={theme.colors.text}
                 onPress={showStartTimePicker}
                 style={{
-                  width: '20%',
+                  width: '33%',
                   margin: 4,
                   backgroundColor: theme.colors.border,
                 }}>
-                {startTime.toString().slice(16, 21)}
+                {startTime.toString().slice(16,21)}
               </Button>
             </View>
             {showStartDate && (
@@ -352,17 +367,19 @@ const CreateEventScreen = ({navigation}) => {
             ) : null}
             <View style={styles.row}>
               <Button
+                icon="calendar"
                 mode="outlined"
                 color={theme.colors.text}
                 onPress={showEndDatePicker}
                 style={{
-                  width: '75%',
+                  width: '61%',
                   margin: 4,
                   backgroundColor: theme.colors.border,
                 }}>
-                {endDate.toUTCString().slice(0, 16)}
+                {endDate.toUTCString().slice(0,16)}
               </Button>
               <Button
+                icon="clock"
                 mode="outlined"
                 color={
                   startDate == endDate && endTime < startTime
@@ -371,11 +388,11 @@ const CreateEventScreen = ({navigation}) => {
                 }
                 onPress={showEndTimePicker}
                 style={{
-                  width: '20%',
+                  width: '33%',
                   margin: 4,
                   backgroundColor: theme.colors.border,
                 }}>
-                {endTime.toString().slice(16, 21)}
+                {endTime.toString().slice(16,21)}
               </Button>
             </View>
             {showEndDate && (
@@ -457,6 +474,108 @@ const CreateEventScreen = ({navigation}) => {
                       closeRecurrenceMenu();
                     }}
                     title="Yearly"
+                  />
+                </Menu>
+              </View>
+            </View>
+          </Card.Content>
+        </Card>
+        <Card style={styles.container}>
+          <Card.Title title="Color" />
+          <Card.Content>
+            <View style={{flex: 2}}>
+              <View style={{flex: 8}}>
+                <Menu
+                  visible={showColorMenu}
+                  onDismiss={closeColorMenu}
+                  style={{position: 'absolute', right: '17%', left: '17%'}}
+                  anchor={
+                    <Button
+                      mode="outlined"
+                      onPress={openColorMenu}
+                      color={eventColorText===""?theme.colors.text:"#ffffff"}
+                      style={{
+                        width: '80%',
+                        backgroundColor: eventColor,
+                        alignSelf: 'center',
+                      }}>
+                      {eventColorText === "" ? "None" : eventColorText}
+                    </Button>
+                  }>
+                  <Menu.Item
+                  icon={() => (
+                    <Avatar.Text   
+                      color='#ffffff'
+                      style={{backgroundColor: '#ff005c'}}
+                      size={24}
+                    />
+                  )}
+                    onPress={() => {
+                      setEventColor('#ff005c');
+                      setEventColorText('Red');
+                      closeColorMenu();
+                    }}
+                    title="Red"
+                  />
+                  <Menu.Item
+                  icon={() => (
+                    <Avatar.Text   
+                      color='#ffffff'
+                      style={{backgroundColor: '#845ec2'}}
+                      size={24}
+                    />
+                  )}
+                    onPress={() => {
+                      setEventColor('#845ec2');
+                      setEventColorText('Purple');
+                      closeColorMenu();
+                    }}
+                    title="Purple"
+                  />
+                  <Menu.Item
+                  icon={() => (
+                    <Avatar.Text   
+                      color='#ffffff'
+                      style={{backgroundColor: '#1a508b'}}
+                      size={24}
+                    />
+                  )}
+                    onPress={() => {
+                      setEventColor('#1a508b');
+                      setEventColorText('Blue');
+                      closeColorMenu();
+                    }}
+                    title="Blue"
+                  />
+                  <Menu.Item
+                  icon={() => (
+                    <Avatar.Text   
+                      color='#ffffff'
+                      style={{backgroundColor: '#6a492b'}}
+                      size={24}
+                    />
+                  )}
+                    onPress={() => {
+                      setEventColor('#6a492b');
+                      setEventColorText('Brown');
+                      closeColorMenu();
+                    }}
+                    title="Brown"
+                  />
+                  <Menu.Item
+                  icon={() => (
+                    <Avatar.Text   
+                      color='#ffffff'
+                      style={{backgroundColor: '#007965'}}
+                      size={24}
+                    />
+                  )}
+                    onPress={() => {
+                      setEventColor('#007965');
+                      setEventColorText('Green');
+                      closeColorMenu();
+                    }}
+                    title="Green"
                   />
                 </Menu>
               </View>
