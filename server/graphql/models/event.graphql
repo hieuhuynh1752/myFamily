@@ -2,12 +2,13 @@ type Event {
     id: ID!
     familyMember: FamilyMember @belongsTo
     title: String!
-    description: String!
+    description: String
     start_date_time: DateTime!
     end_date_time: DateTime!
-    color: String!
-    recurrence: String!
-    event_id: ID!
+    color: String
+    recurrence: String
+    location: String
+    participants_id: String
     reminder: String!
     created_at: DateTime!
     updated_at: DateTime!
@@ -20,7 +21,7 @@ extend type Mutation  @guard(with: ["api"]){
 }
 
 extend type Query @guard(with:["api"]){
-    event(
+    events(
         where: _ @whereConditions(columns: ["member_id"])
     ):[Event!]! @all
 }
@@ -28,22 +29,25 @@ extend type Query @guard(with:["api"]){
 input CreateEventInput{
     familyMember: CreateFamilyMemberBelongsTo
     title: String!
-    description: String!
+    description: String
     start_date_time: DateTime!
     end_date_time: DateTime!
     color: String
     recurrence: String
-    event_id: ID
+    location: String
+    participants_id: String
     reminder: String!
 }
 
 input UpdateEventInput{
+    id: ID!
     title: String!
-    description: String!
+    description: String
     start_date_time: DateTime!
     end_date_time: DateTime!
     color: String
     recurrence: String
-    event_id: ID
+    location: String
+    participants_id: String
     reminder: String!
 }
