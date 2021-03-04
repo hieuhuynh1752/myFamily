@@ -32,16 +32,17 @@ const BottomTabs = ({navigation}) => {
       tabBarOptions={{
         activeTintColor: theme.colors.primary,
         labelStyle: {
-          fontSize: 16,
+          fontSize: 13,
         },
         keyboardHidesTabBar: true,
+        
       }}>
       <Tab.Screen
         name="Post"
         component={PostScreen}
         options={{
           tabBarIcon: ({color, size}) => (
-            <Icon name="home" color={color} size={28} />
+            <Icon name="file" color={color} size={28} />
           ),
         }}
       />

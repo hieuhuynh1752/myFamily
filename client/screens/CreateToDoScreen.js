@@ -37,10 +37,6 @@ const CreateToDoScreen = ({navigation}) => {
 
   const [memberIsAssigned, setMemberIsAssigned] = useState(false);
 
-  const [selectedMembersIds, setSelectedMembersIds] = useState();
-
-  const [isAbleToSubmit, setIsAbleToSubmit] = useState(false);
-
   const handleTaskTitleChange = (event) => {
     setTaskTitle(event);
   };
@@ -50,13 +46,11 @@ const CreateToDoScreen = ({navigation}) => {
   };
 
   const handleSelectMember = (id) => {
-    console.log('select member: ' + id);
     setMemberIsAssigned(true);
     setSelectedMember(id);
   };
 
-  const handleUnselectMember = (id) => {
-    console.log('unselect member: ' + id);
+  const handleUnselectMember = () => {
     setMemberIsAssigned(false);
     setSelectedMember('');
   };
@@ -85,7 +79,7 @@ const CreateToDoScreen = ({navigation}) => {
     update(cache, {data: {createToDo}}) {
       cache.modify({
         fields: {
-          events(existingToDos = []) {
+          toDos(existingToDos = []) {
             const newToDoRef = cache.writeFragment({
               data: createToDo,
               fragment: TODOS_FRAGMENT,
@@ -167,15 +161,6 @@ const CreateToDoScreen = ({navigation}) => {
       );
   };
 
-  useEffect(() => {
-    if (
-      selectedMember !== "" &&
-      taskTitle !== '' 
-    ) {
-      setIsAbleToSubmit(true);
-    }
-  }, [selectedMember, taskTitle]);
-
   return (
     <ImageBackground
       source={require('../assets/background_dot.png')}
@@ -195,7 +180,7 @@ const CreateToDoScreen = ({navigation}) => {
         />
         <Appbar.Action
           icon="check"
-          disabled={!isAbleToSubmit}
+          disabled={taskTitle===""||selectedMember===""}
           onPress={() => {
             handleSubmitCreateToDo();
           }}
