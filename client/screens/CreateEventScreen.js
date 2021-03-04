@@ -59,8 +59,6 @@ const CreateEventScreen = ({navigation}) => {
 
   const [showRecurrenceMenu, setShowRecurrenceMenu] = useState(false);
 
-  const [isAbleToSubmit, setIsAbleToSubmit] = useState(false);
-
   const openRecurrenceMenu = () => setShowRecurrenceMenu(true);
   const closeRecurrenceMenu = () => setShowRecurrenceMenu(false);
 
@@ -240,19 +238,6 @@ const CreateEventScreen = ({navigation}) => {
     );
   };
 
-  useEffect(() => {
-    console.log(eventTitle);
-    if (
-      selectedMembers !== undefined &&
-      eventTitle !== '' &&
-      startDate <= endDate &&
-      endTime > startTime
-    ) {
-      setSelectedMembersIds(selectedMembers.map((member) => member.id));
-      setIsAbleToSubmit(true);
-    }
-  }, [selectedMembers, eventTitle, startDate, endDate, startTime, endTime]);
-
   return (
     <ImageBackground
       source={require('../assets/background_dot.png')}
@@ -272,7 +257,10 @@ const CreateEventScreen = ({navigation}) => {
         />
         <Appbar.Action
           icon="check"
-          disabled={!isAbleToSubmit}
+          disabled={selectedMembers === undefined ||
+            eventTitle === '' ||
+            startDate > endDate ||
+            endTime <= startTime}
           onPress={() => {
             handleSubmitCreateEvent();
           }}

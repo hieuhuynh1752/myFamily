@@ -15,15 +15,14 @@ class CreateToDosTable extends Migration
     {
         Schema::create('to_dos', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('list_id');
+            $table->unsignedBigInteger('member_id');
             $table->unsignedBigInteger('assignee_id');
             $table->string('name');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->string('image')->nullable();
             $table->boolean('is_completed');
             $table->timestamps();
-            $table->foreign('list_id')->references('id')->on('to_do_lists')->onDelete('cascade');
-            $table->foreign('assignee_id')->references('id')->on('family_members')->onDelete('cascade');
+            $table->foreign('member_id')->references('id')->on('family_members')->onDelete('cascade');
         });
     }
 

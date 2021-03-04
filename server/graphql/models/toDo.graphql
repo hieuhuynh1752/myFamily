@@ -1,9 +1,9 @@
 type ToDo{
     id: ID!
-    toDoList: ToDoList! @belongsTo
     familyMember: FamilyMember! @belongsTo
+    assignee_id: ID!
     name: String!
-    description: String!
+    description: String
     image: String
     is_completed: Boolean!
     created_at: DateTime!
@@ -14,32 +14,34 @@ extend type Mutation @guard(with:["api"]){
     createToDo(input: CreateToDoInput! @spread): ToDo @create
     deleteToDo(id: ID!): ToDo @delete
     updateToDo(input: UpdateToDoInput! @spread): ToDo @update
+    updateToDoStatus(input: UpdateToDoStatusInput! @spread): ToDo @update
 }
 
 extend type Query @guard(with:["api"]){
-    toDo(
+    toDos(
         where: _ @whereConditions(columns: ["member_id"])
     ):[ToDo!]! @all
 }
 
 input CreateToDoInput{
-    toDoList: CreateToDoListBelongsTo!
     familyMember: CreateFamilyMemberBelongsTo!
+    assignee_id: ID!
     name: String!
-    description: String!
+    description: String
     image: String
     is_completed: Boolean!
 }
 
 input UpdateToDoInput{
+    id: ID!
+    assignee_id: ID!
     name: String!
-    description: String!
+    description: String
     image: String
+}
+
+input UpdateToDoStatusInput{
+    id: ID!
     is_completed: Boolean!
 }
 
-input CreateToDoListBelongsTo{
-    connect: ID
-    disconnect: Boolean
-    delete: Boolean
-}

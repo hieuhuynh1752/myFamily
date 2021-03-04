@@ -13,6 +13,7 @@ import CalendarScreen from './CalendarScreen';
 import EventDetailsScreen from './EventDetailsScreen';
 import CreateEventScreen from './CreateEventScreen';
 import ToDoScreen from './ToDoScreen';
+import CreateToDoScreen from './CreateToDoScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -31,17 +32,17 @@ const BottomTabs = ({navigation}) => {
       tabBarOptions={{
         activeTintColor: theme.colors.primary,
         labelStyle: {
-          fontSize: 16,
+          fontSize: 13,
         },
         keyboardHidesTabBar: true,
+        
       }}>
       <Tab.Screen
         name="Post"
         component={PostScreen}
         options={{
-          tabBarLabel: 'Post',
           tabBarIcon: ({color, size}) => (
-            <Icon name="home" color={color} size={28} />
+            <Icon name="file" color={color} size={28} />
           ),
         }}
       />
@@ -49,7 +50,6 @@ const BottomTabs = ({navigation}) => {
         name="Calendar"
         component={CalendarScreen}
         options={{
-          tabBarLabel: 'Calendar',
           tabBarIcon: ({color, size}) => (
             <Icon name="calendar" color={color} size={28} />
           ),
@@ -59,7 +59,6 @@ const BottomTabs = ({navigation}) => {
         name="ToDo"
         component={ToDoScreen}
         options={{
-          tabBarLabel: 'To Do',
           tabBarIcon: ({color, size}) => (
             <Icon name="list" color={color} size={28} />
           ),
@@ -91,6 +90,11 @@ const HomeScreen = ({navigation}) => {
       <HomeStack.Screen
         name="CreateEvent"
         component={CreateEventScreen}
+        options={{headerShown: false}}
+      />
+      <HomeStack.Screen
+        name="CreateToDo"
+        component={CreateToDoScreen}
         options={{headerShown: false}}
       />
       <HomeStack.Screen

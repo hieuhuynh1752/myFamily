@@ -5,8 +5,8 @@ import Loader from '../components/Loader';
 import Paragraph from '../components/Paragraph';
 import CreatePostInput from '../components/CreatePostInput';
 import {Button, Menu} from 'react-native-paper';
-import {ImageBackground, StyleSheet, ScrollView} from 'react-native';
-import {Portal, Modal, Card, Divider} from 'react-native-paper';
+import {ImageBackground, StyleSheet, ScrollView, View} from 'react-native';
+import {Portal, Modal, Card, Divider, Text} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
 //end of UI components imports
 
@@ -39,7 +39,7 @@ const PostScreen = ({navigation}) => {
   });
 
   const memberIds = state.members.map((member) => member.id);
-    
+
   const [
     requestCreatePostMutation,
     {loading: requestCreatePostLoading},
@@ -171,7 +171,7 @@ const PostScreen = ({navigation}) => {
         id: parseInt(postId),
         content: content,
       });
-      
+
       const openMenu = () => setVisible(true);
       const closeMenu = () => setVisible(false);
       const openEdit = () => setEditVisible(true);
@@ -230,123 +230,149 @@ const PostScreen = ({navigation}) => {
           console.log(error);
         }
       };
-        return (
-          <>
-            <Menu
-              visible={visible}
-              onDismiss={closeMenu}
-              anchor={
-                <Button mode="text" onPress={openMenu}>
-                  <Icon
-                    name="more-vertical"
-                    size={24}
-                    color={theme.colors.text}
-                  />
+      return (
+        <>
+          <Menu
+            visible={visible}
+            onDismiss={closeMenu}
+            anchor={
+              <Button mode="text" onPress={openMenu}>
+                <Icon
+                  name="more-vertical"
+                  size={24}
+                  color={theme.colors.text}
+                />
+              </Button>
+            }>
+            <Menu.Item
+              onPress={() => {
+                openEdit();
+                closeMenu();
+              }}
+              icon="edit"
+              titleStyle={{color: 'green'}}
+              title="Edit"
+            />
+            <Divider />
+            <Menu.Item
+              onPress={() => {
+                openDelete();
+                closeMenu();
+              }}
+              icon="trash-2"
+              titleStyle={{color: 'red'}}
+              title="Delete"
+            />
+          </Menu>
+          <Portal>
+            <Modal
+              visible={editVisible}
+              onDismiss={closeEdit}
+              contentContainerStyle={{
+                backgroundColor: 'white',
+                padding: 20,
+                width: '80%',
+                alignSelf: 'center',
+              }}>
+              <Text
+                style={{
+                  fontSize: 19,
+                  fontWeight: '900',
+                }}>
+                Edit Post
+              </Text>
+              <Divider style={{marginVertical: 9}} />
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: '500',
+                }}>
+                Post content
+              </Text>
+              <CreatePostInput
+                value={editPost.content}
+                onChangeText={handleEditPost}
+              />
+              <View style={styles.row}>
+                <Button
+                  mode="contained"
+                  color={theme.colors.background}
+                  style={{width: '50%'}}
+                  disabled={requestUpdatePostLoading}
+                  onPress={() => {
+                    setEditPost({id: parseInt(postId), content: content});
+                    closeEdit();
+                  }}>
+                  Cancel
                 </Button>
-              }>
-              <Menu.Item
-                onPress={() => {
-                  openEdit();
-                  closeMenu();
-                }}
-                icon="edit"
-                titleStyle={{color: 'green'}}
-                title="Edit"
-              />
-              <Divider />
-              <Menu.Item
-                onPress={() => {
-                  openDelete();
-                  closeMenu();
-                }}
-                icon="trash-2"
-                titleStyle={{color: 'red'}}
-                title="Delete"
-              />
-            </Menu>
-            <Portal>
-              <Modal
-                visible={editVisible}
-                onDismiss={closeEdit}
-                contentContainerStyle={{
-                  backgroundColor: 'white',
-                  padding: 20,
-                  width: '80%',
-                  alignSelf: 'center',
+                <Button
+                  mode="contained"
+                  color={theme.colors.accent}
+                  style={{width: '50%'}}
+                  loading={requestUpdatePostLoading}
+                  onPress={requestUpdatePost}>
+                  Update
+                </Button>
+              </View>
+            </Modal>
+            <Modal
+              visible={deleteVisible}
+              onDismiss={closeDelete}
+              contentContainerStyle={{
+                backgroundColor: 'white',
+                padding: 20,
+                width: '80%',
+                alignSelf: 'center',
+              }}>
+              <Text
+                style={{
+                  fontSize: 19,
+                  fontWeight: '900',
                 }}>
-                <Card>
-                  <Card.Title title="Edit post" style={{alignSelf: 'center'}} />
-                  <Card.Content>
-                    <CreatePostInput
-                      value={editPost.content}
-                      onChangeText={handleEditPost}
-                    />
-                    <Button
-                      mode="contained"
-                      color={theme.colors.background}
-                      disabled={requestUpdatePostLoading}
-                      onPress={() => {
-                        setEditPost({id: parseInt(postId), content: content});
-                        closeEdit();
-                      }}>
-                      Cancel
-                    </Button>
-                    <Button
-                      mode="contained"
-                      color={theme.colors.accent}
-                      loading={requestUpdatePostLoading}
-                      onPress={requestUpdatePost}>
-                      Update
-                    </Button>
-                  </Card.Content>
-                </Card>
-              </Modal>
-              <Modal
-                visible={deleteVisible}
-                onDismiss={closeDelete}
-                contentContainerStyle={{
-                  backgroundColor: 'white',
-                  padding: 20,
-                  width: '80%',
-                  alignSelf: 'center',
+                Delete post
+              </Text>
+              <Divider style={{marginVertical: 9}} />
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: '500',
+                  marginVertical: 9,
                 }}>
-                <Card>
-                  <Card.Title
-                    title="Delete post"
-                    style={{alignSelf: 'center'}}
-                  />
-                  <Card.Content>
-                    <Paragraph>
-                      Are you sure you want to delete this post?
-                    </Paragraph>
-                    <Button
-                      mode="contained"
-                      color={theme.colors.background}
-                      disabled={requestDeletePostLoading}
-                      onPress={() => {
-                        closeDelete();
-                      }}>
-                      Cancel
-                    </Button>
-                    <Button
-                      mode="contained"
-                      color={theme.colors.notification}
-                      loading={requestDeletePostLoading}
-                      onPress={requestDeletePost}>
-                      Delete
-                    </Button>
-                  </Card.Content>
-                </Card>
-              </Modal>
-            </Portal>
-          </>
-        );
+                Are you sure you want to delete this post?
+              </Text>
+              <Divider style={{marginVertical: 9}} />
+              <View style={styles.row}>
+                <Button
+                  mode="contained"
+                  color={theme.colors.background}
+                  style={{width: '50%'}}
+                  disabled={requestDeletePostLoading}
+                  onPress={() => {
+                    closeDelete();
+                  }}>
+                  Cancel
+                </Button>
+                <Button
+                  mode="contained"
+                  color={theme.colors.notification}
+                  style={{width: '50%'}}
+                  loading={requestDeletePostLoading}
+                  onPress={requestDeletePost}>
+                  Delete
+                </Button>
+              </View>
+            </Modal>
+          </Portal>
+        </>
+      );
     };
     return data.posts.map((post) => (
       <Card key={post.id} style={styles.container}>
         <Card.Title
           title={post.familyMember.user.name}
-          subtitle={(new Date(post.created_at.replace(/\s/g, 'T'))).toString().slice(0,21)}
+          subtitle={new Date(post.created_at.replace(/\s/g, 'T'))
+            .toString()
+            .slice(0, 21)}
           right={() => (
             <ActionButtons
               memberId={post.familyMember.id}
@@ -422,6 +448,10 @@ const styles = StyleSheet.create({
     marginVertical: 16,
     alignSelf: 'center',
     elevation: 6,
+  },
+  row: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
   },
 });
 

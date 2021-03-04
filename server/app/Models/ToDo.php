@@ -12,6 +12,6 @@ class ToDo extends Model
 
     public function familyMember(): BelongsTo
     {
-        return $this->belongsTo(FamilyMember::class, 'assignee_id');
+        return $this->belongsTo(FamilyMember::class, 'member_id');
     }
 }
