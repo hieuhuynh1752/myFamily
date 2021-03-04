@@ -1,18 +1,14 @@
 import gql from 'graphql-tag';
 
-export const REQUEST_UPDATE_TO_DO = gql`
-  mutation updateToDo(
+export const REQUEST_UPDATE_TO_DO_STATUS = gql`
+  mutation updateToDoStatus(
     $id: ID!
-    $assignee: ID!
-    $name: String!
-    $description: String!
+    $is_completed: Boolean!
   ) {
-    updateToDo(
+    updateToDoStatus(
       input: {
         id: $id
-        assignee_id: $assignee
-        name: $name
-        description: $description
+        is_completed: $is_completed
       }
     ) {
       id

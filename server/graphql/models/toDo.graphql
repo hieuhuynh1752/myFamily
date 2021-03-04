@@ -14,6 +14,7 @@ extend type Mutation @guard(with:["api"]){
     createToDo(input: CreateToDoInput! @spread): ToDo @create
     deleteToDo(id: ID!): ToDo @delete
     updateToDo(input: UpdateToDoInput! @spread): ToDo @update
+    updateToDoStatus(input: UpdateToDoStatusInput! @spread): ToDo @update
 }
 
 extend type Query @guard(with:["api"]){
@@ -37,6 +38,10 @@ input UpdateToDoInput{
     name: String!
     description: String
     image: String
+}
+
+input UpdateToDoStatusInput{
+    id: ID!
     is_completed: Boolean!
 }
 
