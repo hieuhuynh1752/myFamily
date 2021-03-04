@@ -25,7 +25,6 @@ import {REQUEST_GET_TO_DOS} from '../graphql/query/getToDos';
 import {REQUEST_UPDATE_TO_DO} from '../graphql/mutations/todos/updateToDo';
 import {REQUEST_UPDATE_TO_DO_STATUS} from '../graphql/mutations/todos/updateToDoStatus';
 import {REQUEST_DELETE_TO_DO} from '../graphql/mutations/todos/deleteToDo';
-import {TODOS_FRAGMENT} from '../graphql/fragments/todosFragment';
 
 import {useAuth} from '../context/userContext';
 import Loader from '../components/Loader';
@@ -500,7 +499,10 @@ const ToDoScreen = ({navigation}) => {
   };
 
   return (
-    <>
+    <ImageBackground
+      source={require('../assets/background_dot.png')}
+      resizeMode="repeat"
+      style={{flex: 1, width: '100%', backgroundColor: '#ffd880'}}>
       <Appbar.Header style={{backgroundColor: theme.colors.card}}>
         <Appbar.Action />
         <Appbar.Content
@@ -515,8 +517,10 @@ const ToDoScreen = ({navigation}) => {
           size={28}
         />
       </Appbar.Header>
-      <GetToDos />
-    </>
+      <ScrollView>
+        <GetToDos />
+      </ScrollView>
+    </ImageBackground>
   );
 };
 
