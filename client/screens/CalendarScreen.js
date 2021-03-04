@@ -136,7 +136,6 @@ const CalendarScreen = ({navigation}) => {
         />
       </Appbar.Header>
       <GetEvents />
-      {}
     </>
   );
 };

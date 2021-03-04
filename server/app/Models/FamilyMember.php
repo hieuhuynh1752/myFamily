@@ -26,11 +26,6 @@ class FamilyMember extends Model
         return $this->hasMany(Event::class, 'member_id');
     }
 
-    public function toDoList(): HasMany
-    {
-        return $this->hasMany(ToDoList::class, 'member_id');
-    }
-
     public function invite(): HasMany
     {
         return $this->hasMany(Invite::class, 'member_id');
@@ -38,7 +33,7 @@ class FamilyMember extends Model
 
     public function toDo(): HasMany
     {
-        return $this->hasMany(ToDo::class, 'assignee_id');
+        return $this->hasMany(ToDo::class, 'member_id');
     }
 
     public function post(): HasMany
