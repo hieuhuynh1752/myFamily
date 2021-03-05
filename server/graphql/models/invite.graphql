@@ -6,3 +6,32 @@ type Invite {
     created_at: DateTime!
     updated_at: DateTime!
 }
+
+extend type Mutation @guard(with:["api"]){
+    createInvite(input: CreateInviteInput! @spread): Invite @create
+    deleteInvite(id: ID!): Invite @delete
+    updateInviteStatus(input: UpdateInviteStatusInput! @spread): Invite @update
+}
+
+extend type Query @guard(with:["api"]){
+    invites(
+        where: _ @whereConditions(columnsEnum:"InviteColumn")
+    ):[Invite!]! @all
+}
+
+enum InviteColumn {
+    MEMBER_ID @enum(value: "member_id")
+    EMAIL @enum(value:"email")
+    STATUS @enum(value:"status")
+}
+
+input CreateInviteInput{
+    familyMember: CreateFamilyMemberBelongsTo!
+    email: String!
+    status: Boolean!
+}
+
+input UpdateInviteStatusInput{
+    id: ID!
+    status: Boolean!
+}
