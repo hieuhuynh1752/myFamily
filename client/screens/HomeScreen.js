@@ -77,14 +77,8 @@ const BottomTabs = ({navigation}) => {
     </Tab.Navigator>
   );
 };
-const HomeScreen = ({navigation}) => {
-  const {state, dispatch} = useAuth();
-  const handleLogout = () => {
-    AsyncStorage.removeItem('@userInfo');
-    dispatch({type: LOGOUT});
-    navigation.replace('SplashScreen');
-  };
 
+const HomeScreen = ({navigation}) => {
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen

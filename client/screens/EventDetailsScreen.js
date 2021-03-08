@@ -35,9 +35,7 @@ import Icon from 'react-native-vector-icons/Feather';
 const EventDetailsScreen = ({route, navigation}) => {
   const {state} = useAuth();
   const {event} = route.params;
-  console.log(event);
   const {members} = route.params;
-
   const [deleteVisible, setDeleteVisible] = useState(false);
 
   const [isInEditMode, setIsInEditMode] = useState(false);

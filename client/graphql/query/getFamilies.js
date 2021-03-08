@@ -13,6 +13,7 @@ query families($userid: Mixed){
             id
             name
           }
+          role
         }
       },
       role

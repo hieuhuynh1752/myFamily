@@ -9,7 +9,7 @@ import {useQuery, useMutation} from '@apollo/client';
 import {
   REQUEST_CREATE_FAMILY,
   REQUEST_CREATE_FAMILY_MEMBER,
-} from '../graphql/mutations/createFamily';
+} from '../graphql/mutations/familyMember/createFamily';
 
 import {REQUEST_GET_FAMILIES} from '../graphql/query/getFamilies';
 import {useAuth, SELECT_FAMILY} from '../context/userContext';
@@ -64,7 +64,7 @@ const FamiliesScreen = ({navigation}) => {
   const handleSelectFamily = (family) => {
     //console.log(family);
     dispatch({type: SELECT_FAMILY, payload: family});
-    navigation.navigate('Home');
+    navigation.replace('Home');
   };
 
   const [

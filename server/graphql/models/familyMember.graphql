@@ -15,6 +15,8 @@ type FamilyMember{
 
 extend type Mutation @guard(with: ["api"]) {
     createFamilyMember(input: CreateFamilyMemberInput! @spread): FamilyMember @create
+    deleteFamilyMember(id: ID!): FamilyMember @delete
+    updateFamilyMemberRole(input: UpdateFamilyMemberRoleInput! @spread): FamilyMember @update
 }
 
 extend type Query @guard(with:["api"]){
@@ -41,4 +43,9 @@ input CreateFamilyBelongsTo{
     connect: ID
     disconnect: Boolean
     delete: Boolean
+}
+
+input UpdateFamilyMemberRoleInput{
+    id: ID!
+    role: String!
 }

@@ -7,7 +7,8 @@ export const getToken = async () => {
     return Promise.resolve(token);
   }
   let savedState = await AsyncStorage.getItem('@userInfo');
-  if (savedState !== null) {
+  console.log(savedState);
+  if (savedState !== null && JSON.parse(savedState).access_token!=="") {
     let savedToken = JSON.parse(savedState).access_token;
     return savedToken;
   } else return token;

@@ -28,7 +28,7 @@ import Loader from '../components/Loader';
 
 const CreateEventScreen = ({navigation}) => {
   const {state} = useAuth();
-  console.log(new Date("2021-03-02T04:45:35"));
+  
   const [eventTitle, setEventTitle] = useState('');
 
   const [eventDescription, setEventDescription] = useState('');
@@ -40,8 +40,6 @@ const CreateEventScreen = ({navigation}) => {
   const [eventColorText, setEventColorText] = useState("");
 
   const [selectedMembers, setSelectedMembers] = useState(state.members);
-
-  const [selectedMembersIds, setSelectedMembersIds] = useState([]);
 
   const [recurrence, setRecurrence] = useState('Never');
 
@@ -125,6 +123,7 @@ const CreateEventScreen = ({navigation}) => {
 
   const handleSelectMember = (id) => {
     console.log('select member: ' + id);
+    console.log(selectedMembers)
     setSelectedMembers((selectedMembers) =>
       selectedMembers.concat(
         state.members.filter((member) => member.id === id),
@@ -134,6 +133,7 @@ const CreateEventScreen = ({navigation}) => {
 
   const handleUnselectMember = (id) => {
     console.log('unselect member: ' + id);
+    console.log(selectedMembers)
     setSelectedMembers((selectedMembers) =>
       selectedMembers.filter((member) => member.id !== id),
     );
@@ -160,7 +160,7 @@ const CreateEventScreen = ({navigation}) => {
           color: eventColor,
           recurrence,
           location: eventLocation,
-          participants_id: selectedMembersIds.toString(),
+          participants_id: selectedMembers.map((member) => member.id).toString(),
           reminder: 'null',
         },
       });
@@ -257,7 +257,7 @@ const CreateEventScreen = ({navigation}) => {
         />
         <Appbar.Action
           icon="check"
-          disabled={selectedMembers === undefined ||
+          disabled={selectedMembers.length==0 ||
             eventTitle === '' ||
             startDate > endDate ||
             endTime <= startTime}
