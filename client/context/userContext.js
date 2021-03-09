@@ -9,10 +9,10 @@ const initialForms = {
     email: '',
   },
   familyId: 0,
-  familyName:'',
-  memberId:0,
-  members:[],
-  role:''
+  familyName: '',
+  memberId: 0,
+  members: [],
+  role: '',
 };
 
 export const UserContext = createContext({...initialForms});
@@ -47,7 +47,15 @@ const reducer = (state, {type, payload}) => {
       };
     }
     case LOGIN_BY_CACHE: {
-      const {access_token, user, familyId, familyName, memberId,members, role} = payload;
+      const {
+        access_token,
+        user,
+        familyId,
+        familyName,
+        memberId,
+        members,
+        role,
+      } = payload;
       return {
         ...state,
         access_token,
@@ -56,7 +64,7 @@ const reducer = (state, {type, payload}) => {
         familyName,
         memberId,
         members,
-        role
+        role,
       };
     }
     case REGISTER: {
@@ -70,15 +78,15 @@ const reducer = (state, {type, payload}) => {
     //end of authentication cases
 
     //usage case
-    case SELECT_FAMILY:{
-      return{
+    case SELECT_FAMILY: {
+      return {
         ...state,
         familyId: parseInt(payload.family.id),
         familyName: payload.family.name,
         memberId: parseInt(payload.id),
         members: payload.family.familyMember,
         role: payload.role,
-      }
+      };
     }
     default:
       throw new Error(`Unhandled action type: ${type}`);
@@ -94,21 +102,6 @@ export const UserContextProvider = (props) => {
       AsyncStorage.setItem('@userInfo', JSON.stringify(state));
     }
   }, [state]);
-
-  useEffect(() => {
-    const getStorageItem = async () => {
-      let savedState = await AsyncStorage.getItem(
-        '@userInfo',
-        (error, value) => {
-          JSON.parse(value);
-        },
-      );
-         if (savedState!==null && savedState.access_token !== undefined) {
-           dispatch({type: LOGIN_BY_CACHE, payload: savedState});
-         }
-    };
-    getStorageItem();
-  }, []);
 
   return (
     <UserContext.Provider value={{state, dispatch}}>

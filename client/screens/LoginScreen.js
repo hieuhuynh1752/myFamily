@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import {useMutation} from '@apollo/client';
 import {REQUEST_LOGIN} from '../graphql/mutations/authentication/login';
@@ -66,13 +66,20 @@ const LoginScreen = ({navigation}) => {
     } catch (error) {
       console.log(error);
       setErrorText('Incorrect Username or Password! Please check again.');
-      setAccountValues((previousState)=>{
-        return{
-          ...previousState, password:''
-        }
-      })
+      setAccountValues((previousState) => {
+        return {
+          ...previousState,
+          password: '',
+        };
+      });
     }
   };
+  
+  useEffect(() => {
+    navigation.addListener('beforeRemove', (e) => {
+      e.preventDefault();
+    });
+  }, [navigation]);
 
   return (
     <Background>
@@ -80,9 +87,7 @@ const LoginScreen = ({navigation}) => {
       <Logo />
 
       <Header>Login</Header>
-        <Paragraph color={theme.colors.error}>
-          {errorText}
-        </Paragraph>
+      <Paragraph color={theme.colors.error}>{errorText}</Paragraph>
       <TextInput
         label="Email"
         returnKeyType="next"

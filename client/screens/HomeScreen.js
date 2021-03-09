@@ -14,6 +14,7 @@ import EventDetailsScreen from './EventDetailsScreen';
 import CreateEventScreen from './CreateEventScreen';
 import ToDoScreen from './ToDoScreen';
 import CreateToDoScreen from './CreateToDoScreen';
+import ManageScreen from './ManageScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -29,6 +30,7 @@ const BottomTabs = ({navigation}) => {
   return (
     <Tab.Navigator
       initialRouteName="Post"
+      backBehavior="initialRoute"
       tabBarOptions={{
         activeTintColor: theme.colors.primary,
         labelStyle: {
@@ -56,7 +58,7 @@ const BottomTabs = ({navigation}) => {
         }}
       />
       <Tab.Screen
-        name="ToDo"
+        name="Tasks"
         component={ToDoScreen}
         options={{
           tabBarIcon: ({color, size}) => (
@@ -64,17 +66,20 @@ const BottomTabs = ({navigation}) => {
           ),
         }}
       />
+      <Tab.Screen
+        name="Manage"
+        component={ManageScreen}
+        options={{
+          tabBarIcon: ({color, size}) => (
+            <Icon name="settings" color={color} size={28} />
+          ),
+        }}
+      />
     </Tab.Navigator>
   );
 };
-const HomeScreen = ({navigation}) => {
-  const {state, dispatch} = useAuth();
-  const handleLogout = () => {
-    AsyncStorage.removeItem('@userInfo');
-    dispatch({type: LOGOUT});
-    navigation.replace('SplashScreen');
-  };
 
+const HomeScreen = ({navigation}) => {
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen

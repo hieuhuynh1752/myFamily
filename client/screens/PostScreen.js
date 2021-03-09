@@ -80,7 +80,7 @@ const PostScreen = ({navigation}) => {
     });
     if (loading) return <Loader loading={loading} />;
     if (error) return null;
-
+    
     const LikeButton = ({like, postId, post}) => {
       const [isLiked, setIsLiked] = useState(false);
       const [likeId, setLikeId] = useState(0);
