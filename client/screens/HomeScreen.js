@@ -30,6 +30,7 @@ const BottomTabs = ({navigation}) => {
   return (
     <Tab.Navigator
       initialRouteName="Post"
+      backBehavior="initialRoute"
       tabBarOptions={{
         activeTintColor: theme.colors.primary,
         labelStyle: {

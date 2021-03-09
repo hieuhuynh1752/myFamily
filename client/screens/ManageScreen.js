@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-
 import {
   Text,
   Button,
@@ -27,21 +26,16 @@ import {REQUEST_UPDATE_FAMILY_MEMBER_ROLE} from '../graphql/mutations/familyMemb
 import {REQUEST_DELETE_FAMILY_MEMBER} from '../graphql/mutations/familyMember/deleteFamilyMember';
 import {INVITES_FRAGMENT} from '../graphql/fragments/invitesFragment';
 
-
-const ManageScreen = ({navigation, client}) => {
+const ManageScreen = ({navigation}) => {
   const {state, dispatch} = useAuth();
-  console.log(client)
   const memberIds = state.members.map((member) => member.id);
 
   const [addMemberVisible, setAddMemberVisible] = useState(false);
-  const [viewMemberVisible, setViewMemberVisible] = useState(false);
+
   const [leaveFamilyVisible, setLeaveFamilyVisible] = useState(false);
 
   const openAddMemberModal = () => setAddMemberVisible(true);
   const closeAddMemberModal = () => setAddMemberVisible(false);
-
-  const openViewMemberModal = () => setViewMemberVisible(true);
-  const closeViewMemberModal = () => setViewMemberVisible(false);
 
   const openLeaveFamilyModal = () => setLeaveFamilyVisible(true);
   const closeLeaveFamilyModal = () => setLeaveFamilyVisible(false);
@@ -87,8 +81,7 @@ const ManageScreen = ({navigation, client}) => {
 
   const handleLogout = () => {
     dispatch({type: LOGOUT});
-    console.log(navigation.dangerouslyGetParent());
-    return navigation.navigate('Login');
+    return navigation.dangerouslyGetParent().navigate('Auth');
   };
 
   const GetInvitedMembers = () => {
@@ -475,6 +468,9 @@ const ManageScreen = ({navigation, client}) => {
 
   const MemberInfoAndActions = ({member}) => {
     console.log(member);
+    const [viewMemberVisible, setViewMemberVisible] = useState(false);
+    const openViewMemberModal = () => setViewMemberVisible(true);
+    const closeViewMemberModal = () => setViewMemberVisible(false);
     return (
       <>
         <Card
@@ -616,6 +612,7 @@ const ManageScreen = ({navigation, client}) => {
           )}
           onPress={() => {
             navigation.navigate('Families');
+            //navigation.dangerouslyGetParent().navigate('Families');
           }}
           titleStyle={{color: '#ffffff'}}
           style={{backgroundColor: '#f05454'}}
