@@ -1,4 +1,8 @@
-import React, {useState, useEffect} from 'react';
+//React import
+import React, {useState} from 'react';
+//End of React import
+
+//UI Components import
 import {
   Appbar,
   Card,
@@ -9,26 +13,26 @@ import {
   Menu,
 } from 'react-native-paper';
 import {theme} from '../core/theme';
-import {
-  ImageBackground,
-  StyleSheet,
-  ScrollView,
-  Keyboard,
-  View,
-} from 'react-native';
-import {useAuth} from '../context/userContext';
+import {ImageBackground, StyleSheet, ScrollView, View} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Paragraph from '../components/Paragraph';
+import Loader from '../components/Loader';
+//End of UI Components import
 
+//React Context import
+import {useAuth} from '../context/userContext';
+//End of React Context import
+
+//GraphQL Client import
 import {useMutation} from '@apollo/client';
 import {REQUEST_CREATE_EVENT} from '../graphql/mutations/events/createEvent';
 import {EVENTS_FRAGMENT} from '../graphql/fragments/eventsFragment';
-
-import Loader from '../components/Loader';
+//End of GraphQL Client import
 
 const CreateEventScreen = ({navigation}) => {
+  //Core States declaration
   const {state} = useAuth();
-  
+
   const [eventTitle, setEventTitle] = useState('');
 
   const [eventDescription, setEventDescription] = useState('');
@@ -37,7 +41,7 @@ const CreateEventScreen = ({navigation}) => {
 
   const [eventColor, setEventColor] = useState(theme.colors.border);
 
-  const [eventColorText, setEventColorText] = useState("");
+  const [eventColorText, setEventColorText] = useState('');
 
   const [selectedMembers, setSelectedMembers] = useState(state.members);
 
@@ -56,13 +60,35 @@ const CreateEventScreen = ({navigation}) => {
   const [showColorMenu, setShowColorMenu] = useState(false);
 
   const [showRecurrenceMenu, setShowRecurrenceMenu] = useState(false);
+  //End of Core States declaration
 
+  //Core Modals & Menus handler declaration
   const openRecurrenceMenu = () => setShowRecurrenceMenu(true);
   const closeRecurrenceMenu = () => setShowRecurrenceMenu(false);
 
   const openColorMenu = () => setShowColorMenu(true);
   const closeColorMenu = () => setShowColorMenu(false);
+  //End of Core Modals & Menus handler declaration
 
+  //Core DateTimePicker visible handler declaration
+  const showStartDatePicker = () => {
+    setShowStartDate(true);
+  };
+
+  const showStartTimePicker = () => {
+    setShowStartTime(true);
+  };
+
+  const showEndDatePicker = () => {
+    setShowEndDate(true);
+  };
+
+  const showEndTimePicker = () => {
+    setShowEndTime(true);
+  };
+  //End of Core DateTimePicker visible handler declaration
+
+  //Core Event state handlers declaration
   const handleEventTitleChange = (event) => {
     setEventTitle(event);
   };
@@ -91,7 +117,6 @@ const CreateEventScreen = ({navigation}) => {
 
   const onEndDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || endDate;
-    //console.log(currentDate);
     setShowEndDate(false);
     setEndDate(currentDate);
     setEndTime(currentDate);
@@ -100,30 +125,9 @@ const CreateEventScreen = ({navigation}) => {
   const onEndTimeChange = (event, selectedTime) => {
     const currentTime = selectedTime || startTime;
     setShowEndTime(false);
-    //console.log(currentTime);
-    console.log(currentTime);
     setEndTime(currentTime);
   };
-
-  const showStartDatePicker = () => {
-    setShowStartDate(true);
-  };
-
-  const showStartTimePicker = () => {
-    setShowStartTime(true);
-  };
-
-  const showEndDatePicker = () => {
-    setShowEndDate(true);
-  };
-
-  const showEndTimePicker = () => {
-    setShowEndTime(true);
-  };
-
   const handleSelectMember = (id) => {
-    console.log('select member: ' + id);
-    console.log(selectedMembers)
     setSelectedMembers((selectedMembers) =>
       selectedMembers.concat(
         state.members.filter((member) => member.id === id),
@@ -132,8 +136,6 @@ const CreateEventScreen = ({navigation}) => {
   };
 
   const handleUnselectMember = (id) => {
-    console.log('unselect member: ' + id);
-    console.log(selectedMembers)
     setSelectedMembers((selectedMembers) =>
       selectedMembers.filter((member) => member.id !== id),
     );
@@ -143,12 +145,12 @@ const CreateEventScreen = ({navigation}) => {
     const startDateTime =
       startDate.toISOString().slice(0, 10) +
       ' ' +
-      startTime.toISOString().slice(11,19);
+      startTime.toISOString().slice(11, 19);
 
     const endDateTime =
       endDate.toISOString().slice(0, 10) +
       ' ' +
-      endTime.toISOString().slice(11,19);
+      endTime.toISOString().slice(11, 19);
     try {
       await requestCreateEventMutation({
         variables: {
@@ -160,7 +162,9 @@ const CreateEventScreen = ({navigation}) => {
           color: eventColor,
           recurrence,
           location: eventLocation,
-          participants_id: selectedMembers.map((member) => member.id).toString(),
+          participants_id: selectedMembers
+            .map((member) => member.id)
+            .toString(),
           reminder: 'null',
         },
       });
@@ -169,7 +173,9 @@ const CreateEventScreen = ({navigation}) => {
       console.log(error);
     }
   };
+  //End of Core Event state handlers declaration
 
+  //GraphQL Create Event Mutation declaration
   const [
     requestCreateEventMutation,
     {loading: requestCreateEventLoading},
@@ -188,7 +194,9 @@ const CreateEventScreen = ({navigation}) => {
       });
     },
   });
+  //End of GraphQL Create Event Mutation declaration
 
+  //FamilyMemberChips Component
   const RenderFamilyMembersChips = () => {
     return (
       <>
@@ -237,7 +245,9 @@ const CreateEventScreen = ({navigation}) => {
       </>
     );
   };
+  //End of FamilyMemberChips Component
 
+  //Core Component return
   return (
     <ImageBackground
       source={require('../assets/background_dot.png')}
@@ -257,10 +267,12 @@ const CreateEventScreen = ({navigation}) => {
         />
         <Appbar.Action
           icon="check"
-          disabled={selectedMembers.length==0 ||
+          disabled={
+            selectedMembers.length == 0 ||
             eventTitle === '' ||
             startDate > endDate ||
-            endTime <= startTime}
+            endTime <= startTime
+          }
           onPress={() => {
             handleSubmitCreateEvent();
           }}
@@ -307,7 +319,7 @@ const CreateEventScreen = ({navigation}) => {
                   margin: 4,
                   backgroundColor: theme.colors.border,
                 }}>
-                {startDate.toUTCString().slice(0,16)}
+                {startDate.toUTCString().slice(0, 16)}
               </Button>
               <Button
                 icon="clock"
@@ -319,7 +331,7 @@ const CreateEventScreen = ({navigation}) => {
                   margin: 4,
                   backgroundColor: theme.colors.border,
                 }}>
-                {startTime.toString().slice(16,21)}
+                {startTime.toString().slice(16, 21)}
               </Button>
             </View>
             {showStartDate && (
@@ -364,7 +376,7 @@ const CreateEventScreen = ({navigation}) => {
                   margin: 4,
                   backgroundColor: theme.colors.border,
                 }}>
-                {endDate.toUTCString().slice(0,16)}
+                {endDate.toUTCString().slice(0, 16)}
               </Button>
               <Button
                 icon="clock"
@@ -380,7 +392,7 @@ const CreateEventScreen = ({navigation}) => {
                   margin: 4,
                   backgroundColor: theme.colors.border,
                 }}>
-                {endTime.toString().slice(16,21)}
+                {endTime.toString().slice(16, 21)}
               </Button>
             </View>
             {showEndDate && (
@@ -481,23 +493,25 @@ const CreateEventScreen = ({navigation}) => {
                     <Button
                       mode="outlined"
                       onPress={openColorMenu}
-                      color={eventColorText===""?theme.colors.text:"#ffffff"}
+                      color={
+                        eventColorText === '' ? theme.colors.text : '#ffffff'
+                      }
                       style={{
                         width: '80%',
                         backgroundColor: eventColor,
                         alignSelf: 'center',
                       }}>
-                      {eventColorText === "" ? "None" : eventColorText}
+                      {eventColorText === '' ? 'None' : eventColorText}
                     </Button>
                   }>
                   <Menu.Item
-                  icon={() => (
-                    <Avatar.Text   
-                      color='#ffffff'
-                      style={{backgroundColor: '#ff005c'}}
-                      size={24}
-                    />
-                  )}
+                    icon={() => (
+                      <Avatar.Text
+                        color="#ffffff"
+                        style={{backgroundColor: '#ff005c'}}
+                        size={24}
+                      />
+                    )}
                     onPress={() => {
                       setEventColor('#ff005c');
                       setEventColorText('Red');
@@ -506,13 +520,13 @@ const CreateEventScreen = ({navigation}) => {
                     title="Red"
                   />
                   <Menu.Item
-                  icon={() => (
-                    <Avatar.Text   
-                      color='#ffffff'
-                      style={{backgroundColor: '#845ec2'}}
-                      size={24}
-                    />
-                  )}
+                    icon={() => (
+                      <Avatar.Text
+                        color="#ffffff"
+                        style={{backgroundColor: '#845ec2'}}
+                        size={24}
+                      />
+                    )}
                     onPress={() => {
                       setEventColor('#845ec2');
                       setEventColorText('Purple');
@@ -521,13 +535,13 @@ const CreateEventScreen = ({navigation}) => {
                     title="Purple"
                   />
                   <Menu.Item
-                  icon={() => (
-                    <Avatar.Text   
-                      color='#ffffff'
-                      style={{backgroundColor: '#1a508b'}}
-                      size={24}
-                    />
-                  )}
+                    icon={() => (
+                      <Avatar.Text
+                        color="#ffffff"
+                        style={{backgroundColor: '#1a508b'}}
+                        size={24}
+                      />
+                    )}
                     onPress={() => {
                       setEventColor('#1a508b');
                       setEventColorText('Blue');
@@ -536,13 +550,13 @@ const CreateEventScreen = ({navigation}) => {
                     title="Blue"
                   />
                   <Menu.Item
-                  icon={() => (
-                    <Avatar.Text   
-                      color='#ffffff'
-                      style={{backgroundColor: '#6a492b'}}
-                      size={24}
-                    />
-                  )}
+                    icon={() => (
+                      <Avatar.Text
+                        color="#ffffff"
+                        style={{backgroundColor: '#6a492b'}}
+                        size={24}
+                      />
+                    )}
                     onPress={() => {
                       setEventColor('#6a492b');
                       setEventColorText('Brown');
@@ -551,13 +565,13 @@ const CreateEventScreen = ({navigation}) => {
                     title="Brown"
                   />
                   <Menu.Item
-                  icon={() => (
-                    <Avatar.Text   
-                      color='#ffffff'
-                      style={{backgroundColor: '#007965'}}
-                      size={24}
-                    />
-                  )}
+                    icon={() => (
+                      <Avatar.Text
+                        color="#ffffff"
+                        style={{backgroundColor: '#007965'}}
+                        size={24}
+                      />
+                    )}
                     onPress={() => {
                       setEventColor('#007965');
                       setEventColorText('Green');
@@ -573,6 +587,7 @@ const CreateEventScreen = ({navigation}) => {
       </ScrollView>
     </ImageBackground>
   );
+  //End of Core Component return
 };
 
 export default CreateEventScreen;

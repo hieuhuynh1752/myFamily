@@ -1,13 +1,13 @@
 import React, {useState, useEffect} from 'react';
 
 //import UI components
-import Loader from '../components/Loader';
 import Paragraph from '../components/Paragraph';
 import CreatePostInput from '../components/CreatePostInput';
 import {IconButton, Button, Menu, TextInput} from 'react-native-paper';
 import {ImageBackground, StyleSheet, ScrollView, Keyboard} from 'react-native';
 import {Portal, Modal, Card, Divider} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
+import BackButton from '../components/BackButton';
 //end of UI components imports
 
 //import theme
@@ -28,18 +28,23 @@ import {
 } from '../graphql/fragments/postsFragment';
 //end of graphql imports
 
-//import user context
+//React Context import
 import {useAuth} from '../context/userContext';
-import BackButton from '../components/BackButton';
+//End of React Context import
 
 const PostDetailsScreen = ({route, navigation}) => {
+  //Core States declaration
   const {state} = useAuth();
   const {post} = route.params;
 
   const [content, setContent] = useState(post.content);
   const [comments, setComments] = useState(post.comment);
+  //End of Core States declaration
 
+  //List of Comments Component
   const CommentList = () => {
+    
+    //Delete Comment Button Component for Comment Component
     const CommentButton = ({commentId, memberId}) => {
       if (state.role !== 'Admin' && memberId !== state.memberId) return null;
       const [requestDeleteComment] = useMutation(REQUEST_DELETE_COMMENT, {
@@ -70,6 +75,7 @@ const PostDetailsScreen = ({route, navigation}) => {
         </Button>
       );
     };
+    //End of Delete Comment Button Component for Comment Component
 
     return (
       <>
@@ -96,7 +102,9 @@ const PostDetailsScreen = ({route, navigation}) => {
       </>
     );
   };
+  //End of List of Comments Component
 
+  //Comment section Component
   const CommentSection = () => {
     const [newComment, setNewComment] = useState('');
 
@@ -150,8 +158,12 @@ const PostDetailsScreen = ({route, navigation}) => {
       </Card>
     );
   };
+  //End of Comment Section Component
 
+  //Get Post info Component
   const GetPost = () => {
+
+    //Like Button Component for Post info Component
     const LikeButton = ({like, postId, post}) => {
       const [isLiked, setIsLiked] = useState(false);
       const [likeId, setLikeId] = useState(0);
@@ -189,7 +201,7 @@ const PostDetailsScreen = ({route, navigation}) => {
           });
         },
       });
-
+      
       const likeButton = isLiked ? (
         <Button
           style={{width: '50%'}}
@@ -233,7 +245,9 @@ const PostDetailsScreen = ({route, navigation}) => {
 
       return likeButton;
     };
+    //End of Like Button Component for Post info Component
 
+    //Action Buttons Component for Post info Component
     const ActionButtons = ({memberId, postId, content}) => {
       if (state.role !== 'Admin' && memberId !== state.memberId) return null;
       const [visible, setVisible] = useState(false);
@@ -418,6 +432,8 @@ const PostDetailsScreen = ({route, navigation}) => {
           </>
         );
     };
+    //End of Action Buttons Component for Post info Component
+
     return (
       <Card key={post.id} style={styles.container}>
         <Card.Title
@@ -452,7 +468,8 @@ const PostDetailsScreen = ({route, navigation}) => {
       </Card>
     );
   };
-
+  //End of Get Post Info Component
+  
   return (
     <ImageBackground
       source={require('../assets/background_dot.png')}

@@ -1,23 +1,32 @@
+//React import
 import React from 'react';
+//End React import
+
+//UI Components import
 import Paragraph from '../components/Paragraph';
 import {theme} from '../core/theme';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import {Agenda} from 'react-native-calendars';
-import {Card, Avatar, Appbar} from 'react-native-paper';
+import {Card, Appbar} from 'react-native-paper';
 import Loader from '../components/Loader';
+//End UI Components import
 
-//import graphql queries, mutations & fragments
+//GraphQL Client import 
 import {useQuery} from '@apollo/client';
 import {REQUEST_GET_EVENTS} from '../graphql/query/getEvents';
-//end of graphql imports
+//end of GraphQL Client import
 
-//import user context
+//React context import
 import {useAuth} from '../context/userContext';
+//End React context import
 
 const CalendarScreen = ({navigation}) => {
+  //Core States declaration
   const {state} = useAuth();
   const memberIds = state.members.map((member) => member.id);
+  //End of Core States declaration
 
+  //GetEvents Component using GraphQL
   const GetEvents = () => {
     const {loading, error, data} = useQuery(REQUEST_GET_EVENTS, {
       variables: {membersid: memberIds},
@@ -52,7 +61,6 @@ const CalendarScreen = ({navigation}) => {
             refinedEvents.findIndex((event) => Object.keys(event)[0] == key)
           ] = updatedEvent;
         } else {
-          //console.log(event[key][0]);
           existingEvent[key].push(event[key][0]);
         }
       }
@@ -96,7 +104,6 @@ const CalendarScreen = ({navigation}) => {
     };
 
     const renderEmptyDate = () => {
-      console.log('renderEmptyData');
       return (
         <View style={styles.emptyDate}>
           <Paragraph>Oops, seems like there is no event this day!</Paragraph>
@@ -118,7 +125,9 @@ const CalendarScreen = ({navigation}) => {
       </View>
     );
   };
+  //End of GetEvents Component using GraphQL
 
+  //Core Component return
   return (
     <>
       <Appbar.Header style={{backgroundColor: theme.colors.card}}>
@@ -138,6 +147,7 @@ const CalendarScreen = ({navigation}) => {
       <GetEvents />
     </>
   );
+  //End of Core Component return
 };
 
 const styles = StyleSheet.create({

@@ -3,7 +3,7 @@ import {ActivityIndicator, View, StyleSheet} from 'react-native';
 import {useAuth, LOGIN_BY_CACHE} from '../context/userContext';
 import {theme} from '../core/theme';
 import AsyncStorage from '@react-native-community/async-storage';
-
+import Logo from '../components/Logo';
 const SplashScreen = ({navigation}) => {
   const {state, dispatch} = useAuth();
   const [animating, setAnimating] = useState(true);
@@ -11,8 +11,6 @@ const SplashScreen = ({navigation}) => {
   const getStorageItem = async () => {
     const savedState = await AsyncStorage.getItem('@userInfo');
     const savedStateInObject = JSON.parse(savedState);
-    //console.log(savedState);
-    //console.log(savedStateInObject);
     if (
       savedStateInObject !== null &&
       savedStateInObject.access_token != ""
@@ -31,6 +29,7 @@ const SplashScreen = ({navigation}) => {
 
   return (
     <View style={[styles.container, {backgroundColor: theme.colors.primary}]}>
+      <Logo/>
       <ActivityIndicator
         animating={animating}
         color="#ffffff"

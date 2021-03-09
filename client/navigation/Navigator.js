@@ -1,7 +1,12 @@
+//React import
 import React from 'react';
+//End of React import
 
+//Stack Navigator import
 import {createStackNavigator} from '@react-navigation/stack';
+//End of Stack Navigator import
 
+//Screens Components import
 import {
   SplashScreen,
   LoginScreen,
@@ -9,9 +14,13 @@ import {
   RegisterScreen,
   FamiliesScreen,
 } from '../screens';
+//End of Screens Components import
 
+//Create Stack Navigator declaration
 const Stack = createStackNavigator();
+//End of Create Stack Navigator declaration
 
+//Authentication Screens Stack Component
 const Auth = () => {
   return (
     <Stack.Navigator initialRouteName="LoginScreen">
@@ -28,7 +37,9 @@ const Auth = () => {
     </Stack.Navigator>
   );
 };
+//End of Authentication Screens Stack Component
 
+//Core Navigator Component
 const Navigator = () => {
   return (
     <Stack.Navigator initialRouteName="SplashScreen">
@@ -51,5 +62,6 @@ const Navigator = () => {
     </Stack.Navigator>
   );
 };
+//End of Core Navigator Component
 
 export default Navigator;

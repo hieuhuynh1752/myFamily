@@ -1,4 +1,8 @@
+//React import
 import React, {useState} from 'react';
+//End of React import
+
+//UI components import
 import Paragraph from '../components/Paragraph';
 import {ImageBackground, StyleSheet, ScrollView, View} from 'react-native';
 import {
@@ -17,22 +21,54 @@ import {
   Checkbox,
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
-
 import {theme} from '../core/theme';
+import Loader from '../components/Loader';
+//End of UI components import
 
+//GraphQL Client import
 import {useQuery, useMutation} from '@apollo/client';
 import {REQUEST_GET_TO_DOS} from '../graphql/query/getToDos';
 import {REQUEST_UPDATE_TO_DO} from '../graphql/mutations/todos/updateToDo';
 import {REQUEST_UPDATE_TO_DO_STATUS} from '../graphql/mutations/todos/updateToDoStatus';
 import {REQUEST_DELETE_TO_DO} from '../graphql/mutations/todos/deleteToDo';
+//End of GraphQL Client import
 
+//React Context import
 import {useAuth} from '../context/userContext';
-import Loader from '../components/Loader';
+//End of React Context import
 
 const ToDoScreen = ({navigation}) => {
+  //Core States declaration
   const {state} = useAuth();
   const memberIds = state.members.map((member) => member.id);
+  //End of Core States declaration
+  
+  //Core GraphQL Mutations declaration
+  const [
+    requestUpdateToDoMutation,
+    {loading: requestUpdateToDoLoading},
+  ] = useMutation(REQUEST_UPDATE_TO_DO);
+  
+  const [
+    requestDeleteToDoMutation,
+    {loading: requestDeleteToDoLoading},
+  ] = useMutation(REQUEST_DELETE_TO_DO, {
+    update(cache, {data: {deleteToDo}}) {
+      cache.modify({
+        fields: {
+          toDos(existingToDos, {readField}) {
+            const newToDos = existingToDos.filter(
+              (toDoRef) => readField('id', toDoRef) !== deleteToDo.id,
+            );
+            return newToDos;
+          },
+        },
+      });
+    },
+  });
+  //End of Core GraphQL Mutations declaration
 
+  //Get To Dos based on useQuery GraphQL Component
   const GetToDos = () => {
     const {loading, error, data} = useQuery(REQUEST_GET_TO_DOS, {
       variables: {membersid: memberIds},
@@ -52,7 +88,9 @@ const ToDoScreen = ({navigation}) => {
       </Card>
     ));
   };
+  //End of Get To Dos based on useQuery GraphQL Component
 
+  //List Item Component for Get To Dos Component
   const ListItem = ({toDo, assigneeName}) => {
     const [dialogVisible, setDialogVisible] = useState(false);
     const [isChecked, setIsChecked] = useState(toDo.is_completed);
@@ -171,7 +209,9 @@ const ToDoScreen = ({navigation}) => {
       </>
     );
   };
+  //End of List Item Component for Get To Dos Component
 
+  //Action Buttons Component for List Item Component
   const ActionButtons = ({
     memberId,
     toDoId,
@@ -213,29 +253,6 @@ const ToDoScreen = ({navigation}) => {
       setMemberIsAssigned(false);
       setToDoAssigneeId('');
     };
-
-    const [
-      requestUpdateToDoMutation,
-      {loading: requestUpdateToDoLoading},
-    ] = useMutation(REQUEST_UPDATE_TO_DO);
-
-    const [
-      requestDeleteToDoMutation,
-      {loading: requestDeleteToDoLoading},
-    ] = useMutation(REQUEST_DELETE_TO_DO, {
-      update(cache, {data: {deleteToDo}}) {
-        cache.modify({
-          fields: {
-            toDos(existingToDos, {readField}) {
-              const newToDos = existingToDos.filter(
-                (toDoRef) => readField('id', toDoRef) !== deleteToDo.id,
-              );
-              return newToDos;
-            },
-          },
-        });
-      },
-    });
 
     const requestUpdateToDo = async () => {
       try {
@@ -497,6 +514,7 @@ const ToDoScreen = ({navigation}) => {
       </>
     );
   };
+  //End of Action Buttons Component for List Item Component
 
   return (
     <ImageBackground

@@ -1,4 +1,8 @@
+//React import
 import React, {useState} from 'react';
+//End React import
+
+//UI Components import
 import {
   Text,
   Button,
@@ -13,33 +17,47 @@ import {
   Menu,
 } from 'react-native-paper';
 import {ImageBackground, StyleSheet, ScrollView, View} from 'react-native';
-import {useAuth, LOGOUT} from '../context/userContext';
-import {theme} from '../core/theme';
-import {} from '../components/TextInput';
-import {emailValidator} from '../core/utils';
 import Loader from '../components/Loader';
 import Icon from 'react-native-vector-icons/Feather';
+import {theme} from '../core/theme';
+//End UI Components import
+
+//React Context import
+import {useAuth, LOGOUT} from '../context/userContext';
+//End Context import
+
+//Validator import
+import {emailValidator} from '../core/utils';
+//End validator import
+
+//GraphQL Client import
 import {useMutation, useQuery} from '@apollo/client';
 import {REQUEST_GET_INVITES_BY_MEMBERS} from '../graphql/query/getInvites';
 import {REQUEST_CREATE_INVITE} from '../graphql/mutations/invites/createInvite';
 import {REQUEST_UPDATE_FAMILY_MEMBER_ROLE} from '../graphql/mutations/familyMember/updateFamilyMemberRole';
 import {REQUEST_DELETE_FAMILY_MEMBER} from '../graphql/mutations/familyMember/deleteFamilyMember';
 import {INVITES_FRAGMENT} from '../graphql/fragments/invitesFragment';
+//End GraphQL Client import
 
 const ManageScreen = ({navigation}) => {
+  //Core States declaration
   const {state, dispatch} = useAuth();
   const memberIds = state.members.map((member) => member.id);
 
   const [addMemberVisible, setAddMemberVisible] = useState(false);
 
   const [leaveFamilyVisible, setLeaveFamilyVisible] = useState(false);
+  //End of Core States declaration
 
+  //Core Modals handler declaration
   const openAddMemberModal = () => setAddMemberVisible(true);
   const closeAddMemberModal = () => setAddMemberVisible(false);
 
   const openLeaveFamilyModal = () => setLeaveFamilyVisible(true);
   const closeLeaveFamilyModal = () => setLeaveFamilyVisible(false);
+  //End of core Modals handler declaration
 
+  //Core GraphQL Mutations declaration
   const [
     requestUpdateFamilyMemberRoleMutation,
     {loading: requestUpdateFamilyMemberRoleLoading},
@@ -66,10 +84,11 @@ const ManageScreen = ({navigation}) => {
         },
       });
     },
-
     variables: {id: state.memberId},
   });
+  //End of Core GraphQL Mutations declaration
 
+  //GraphQL Mutation's Executors declaration
   const requestLeaveFamily = async () => {
     try {
       await requestLeaveFamilyMutation();
@@ -78,12 +97,17 @@ const ManageScreen = ({navigation}) => {
       console.log(error);
     }
   };
+  //End of GraphQL Mutation's Executors declaration
 
+  //Logout handler declaration
   const handleLogout = () => {
     dispatch({type: LOGOUT});
     return navigation.dangerouslyGetParent().navigate('Auth');
   };
+  //End of Logout handler declaration
 
+  //GraphQL useQuery implementations
+  ////GetInvitedMembers Component
   const GetInvitedMembers = () => {
     const {loading, error, data} = useQuery(REQUEST_GET_INVITES_BY_MEMBERS, {
       variables: {membersid: memberIds},
@@ -125,7 +149,10 @@ const ManageScreen = ({navigation}) => {
       </>
     );
   };
+  ////End of GetInvitedMembers Component
+  //End of GraphQL useQuery implementation
 
+  //InviteNewFamilyMembers Component
   const InviteNewFamilyMembers = ({invites}) => {
     const [addMemberError, setAddMemberError] = useState('');
     const [receiverEmail, setReceiverEmail] = useState('');
@@ -171,27 +198,22 @@ const ManageScreen = ({navigation}) => {
         );
       }
       try {
-        let response = await fetch(
-          'https://api.emailjs.com/api/v1.0/email/send',
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              user_id: 'user_kvNT9chb46JAgs79ueEhi',
-              service_id: 'service_lhwih3k',
-              template_id: 'template_q5f35tn',
-              template_params: {
-                from_name: state.user.name,
-                from_family: state.familyName,
-                to_email: receiverEmail,
-              },
-            }),
+        await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
           },
-        );
-        let json = await response.toString();
-        console.log(json);
+          body: JSON.stringify({
+            user_id: 'user_kvNT9chb46JAgs79ueEhi',
+            service_id: 'service_lhwih3k',
+            template_id: 'template_q5f35tn',
+            template_params: {
+              from_name: state.user.name,
+              from_family: state.familyName,
+              to_email: receiverEmail,
+            },
+          }),
+        });
         await requestCreateInviteMutation();
         closeAddMemberModal();
       } catch (error) {
@@ -234,7 +256,9 @@ const ManageScreen = ({navigation}) => {
       </>
     );
   };
+  //End of InviteNewFamilyMembers Component
 
+  //ActionButtons Component
   const ActionButtons = ({memberId, role, memberName}) => {
     if (state.role !== 'Admin') return null;
     const [visible, setVisible] = useState(false);
@@ -465,9 +489,10 @@ const ManageScreen = ({navigation}) => {
       </>
     );
   };
+  //End of ActionButtons Component
 
+  //MemberInfoAndActions Component
   const MemberInfoAndActions = ({member}) => {
-    console.log(member);
     const [viewMemberVisible, setViewMemberVisible] = useState(false);
     const openViewMemberModal = () => setViewMemberVisible(true);
     const closeViewMemberModal = () => setViewMemberVisible(false);
@@ -535,7 +560,9 @@ const ManageScreen = ({navigation}) => {
       </>
     );
   };
+  // End of MemberInfoAndActions Component
 
+  //Core component return
   return (
     <ImageBackground
       source={require('../assets/background_dot.png')}
@@ -745,6 +772,7 @@ const ManageScreen = ({navigation}) => {
       </Portal>
     </ImageBackground>
   );
+  //End of Core component return
 };
 
 const styles = StyleSheet.create({

@@ -1,12 +1,15 @@
+//React import
 import React, {useEffect} from 'react';
-import AsyncStorage from '@react-native-community/async-storage';
-import {useAuth, LOGOUT} from '../context/userContext';
+//End of React import
 
+//UI components import
 import {theme} from '../core/theme';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Feather';
+//End of UI components import
 
+//Child Screen Components import
 import PostScreen from './PostScreen';
 import PostDetailsScreen from './PostDetailsScreen';
 import CalendarScreen from './CalendarScreen';
@@ -15,11 +18,17 @@ import CreateEventScreen from './CreateEventScreen';
 import ToDoScreen from './ToDoScreen';
 import CreateToDoScreen from './CreateToDoScreen';
 import ManageScreen from './ManageScreen';
+//End of Child Screen Components import
 
+//Bottom tab navigator creation
 const Tab = createBottomTabNavigator();
+//End of Bottom tab navigator creation
 
+//Home Screen Stack navigator creation
 const HomeStack = createStackNavigator();
+//End of Home Screen Stack navigator creation
 
+//BottomTabs Component 
 const BottomTabs = ({navigation}) => {
   useEffect(() => {
     navigation.addListener('beforeRemove', (e) => {
@@ -78,7 +87,9 @@ const BottomTabs = ({navigation}) => {
     </Tab.Navigator>
   );
 };
+//End of Bottom Tabs Component
 
+//Home Screen Component
 const HomeScreen = ({navigation}) => {
   return (
     <HomeStack.Navigator>
@@ -110,5 +121,6 @@ const HomeScreen = ({navigation}) => {
     </HomeStack.Navigator>
   );
 };
+//End of Home Screen Component
 
 export default HomeScreen;

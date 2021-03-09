@@ -14,7 +14,6 @@ import {API_URL} from '@env';
 
 //apollo-setup
 const httpLink = new HttpLink({uri: API_URL});
-console.log(API_URL);
 const authLink = setContext(async (req, {headers}) => {
   const token = await getToken();
   return {

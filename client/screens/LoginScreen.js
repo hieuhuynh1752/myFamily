@@ -1,24 +1,35 @@
+//React import
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
-import {useMutation} from '@apollo/client';
-import {REQUEST_LOGIN} from '../graphql/mutations/authentication/login';
-import {useAuth} from '../context/userContext';
-import {LOGIN} from '../context/userContext';
-import Loader from '../components/Loader';
-//import {useTheme, TextInput} from 'react-native-paper';
+//End of React import
 
+//UI components import
+import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import Background from '../components/Background';
 import Logo from '../components/Logo';
 import Header from '../components/Header';
 import Button from '../components/Button';
 import TextInput from '../components/TextInput';
 import Paragraph from '../components/Paragraph';
-
 import {theme} from '../core/theme';
+import Loader from '../components/Loader';
+//End of UI components import
 
+//GraphQL Client import
+import {useMutation} from '@apollo/client';
+import {REQUEST_LOGIN} from '../graphql/mutations/authentication/login';
+import {LOGIN} from '../context/userContext';
+//End of GraphQL Client import
+
+//React Context import
+import {useAuth} from '../context/userContext';
+//End of React Context import
+
+//Validator utils import
 import {emailValidator, passwordValidator} from '../core/utils';
+//End of Validator utils import
 
 const LoginScreen = ({navigation}) => {
+  //Core States declaration
   const {state, dispatch} = useAuth();
   const [accountValues, setAccountValues] = useState({
     username: '',
@@ -27,6 +38,9 @@ const LoginScreen = ({navigation}) => {
   const [errorText, setErrorText] = useState('');
   const [emailErrorText, setEmailErrorText] = useState('');
   const [passwordErrorText, setPasswordErrorText] = useState('');
+  //End of Core States declaration
+
+  //Core GraphQL Mutations declaration
   const [requestLoginMutation, {loading: requestLoginLoading}] = useMutation(
     REQUEST_LOGIN,
     {
@@ -36,7 +50,9 @@ const LoginScreen = ({navigation}) => {
       variables: accountValues,
     },
   );
+  //End of Core GraphQL Mutations declaration
 
+  //Core State handlers declaration
   const handleUsernameChange = (event) => {
     setEmailErrorText('');
     setAccountValues((previousState) => {
@@ -74,13 +90,17 @@ const LoginScreen = ({navigation}) => {
       });
     }
   };
-  
+  //End of Core State handlers declaration
+
+  //useEffect Hook to prevent goBackToPreviousScreen action
   useEffect(() => {
     navigation.addListener('beforeRemove', (e) => {
       e.preventDefault();
     });
   }, [navigation]);
+  //End of useEffect Hook to prevent goBackToPreviousScreen action
 
+  //Core Component return
   return (
     <Background>
       <Loader loading={requestLoginLoading} />
@@ -100,7 +120,6 @@ const LoginScreen = ({navigation}) => {
         textContentType="emailAddress"
         keyboardType="email-address"
       />
-
       <TextInput
         label="Password"
         returnKeyType="done"
@@ -110,22 +129,12 @@ const LoginScreen = ({navigation}) => {
         errorText={passwordErrorText}
         secureTextEntry
       />
-
-      {/* NEED TO TEST
-       <View style={styles.forgotPassword}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('ForgotPasswordScreen')}>
-          <Text style={styles.label}>Forgot your password?</Text>
-        </TouchableOpacity>
-      </View> */}
-
       <Button
         mode="contained"
         color={theme.colors.surface}
         onPress={requestLogin}>
         Login
       </Button>
-
       <View style={styles.row}>
         <Text style={styles.label}>Don’t have an account? </Text>
         <TouchableOpacity onPress={() => navigation.navigate('Register')}>
@@ -134,6 +143,7 @@ const LoginScreen = ({navigation}) => {
       </View>
     </Background>
   );
+  //End of Core Component return
 };
 
 export default LoginScreen;

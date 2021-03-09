@@ -8,7 +8,7 @@ export const theme = {
   ...CombinedDefaultTheme,
   colors: {
     ...CombinedDefaultTheme.colors,
-    primary: '#600EE6',
+    primary: '#c15050',
     secondary: '#414757',
     error: '#f13a59',
   },

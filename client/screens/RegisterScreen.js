@@ -1,5 +1,9 @@
+//React import
 import React, {useState, createRef} from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+//End of React import
+
+//UI components import
+import {StyleSheet} from 'react-native';
 import Background from '../components/Background';
 import Logo from '../components/Logo';
 import Header from '../components/Header';
@@ -7,13 +11,22 @@ import Button from '../components/Button';
 import TextInput from '../components/TextInput';
 import BackButton from '../components/BackButton';
 import { theme } from '../core/theme';
+import Loader from '../components/Loader';
+import Paragraph from '../components/Paragraph';
+//End of UI components import
+
+//GraphQL Client import
 import {useMutation} from '@apollo/client';
 import {REQUEST_REGISTER} from '../graphql/mutations/authentication/register';
 import {useAuth,REGISTER} from '../context/userContext';
-import Loader from '../components/Loader';
+//End of GraphQL Client import
+
+//Validator utils import
 import {emailValidator, passwordValidator, nameValidator} from '../core/utils';
-import Paragraph from '../components/Paragraph';
+//End of Validator utils import
+
 const RegisterScreen = ({navigation}) => {
+  //Core States declaration
   const {state, dispatch} = useAuth();
     
   const [accountValues, setAccountValues] = useState({
@@ -28,7 +41,9 @@ const RegisterScreen = ({navigation}) => {
   const [nameErrorText, setNameErrorText] = useState('')
   const [passwordErrorText, setPasswordErrorText] = useState('')
   const [passwordConfirmErrorText, setPasswordConfirmErrorText] = useState('')
+  //End of Core States declaration
 
+  //Core GraphQL Mutations declaration
   const [requestRegisterMutation, {loading: requestRegisterLoading}] = useMutation(
     REQUEST_REGISTER,
     {
@@ -38,7 +53,9 @@ const RegisterScreen = ({navigation}) => {
       variables: accountValues,
     },
   );
+  //Core GraphQL Mutations declaration
 
+  //Core State handlers declaration
   const handleUsernameChange = (event) => {
     setAccountValues((previousState) => {
       return {...previousState, name: event};
@@ -78,7 +95,7 @@ const RegisterScreen = ({navigation}) => {
       return setPasswordErrorText(passwordError);
     }
     if (accountValues.password_confirmation!==accountValues.password) {
-      return setPasswordConfirmText('Oops, your Password & Password Confirm are not the same!');
+      return setPasswordConfirmErrorText('Oops, your Password & Password Confirm are not the same!');
     }
     try {
       await requestRegisterMutation();
@@ -88,6 +105,7 @@ const RegisterScreen = ({navigation}) => {
       setErrorText('Sorry! This account has been registered before.');
     }
   };
+  //End of Core State handlers declaration
 
   return (
     <Background>
@@ -139,11 +157,9 @@ const RegisterScreen = ({navigation}) => {
         errorText={passwordConfirmErrorText}
         secureTextEntry
       />
-
       <Button mode="contained" onPress={requestRegister} style={styles.button}>
         Sign Up
       </Button>
-
     </Background>
   );
 };

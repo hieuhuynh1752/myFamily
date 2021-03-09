@@ -1,24 +1,14 @@
+//React import
 import React, {useState} from 'react';
+//End of React import
+
+//UI components import
 import Background from '../components/Background';
 import Header from '../components/Header';
 import Paragraph from '../components/Paragraph';
 import Button from '../components/Button';
 import TextInput from '../components/TextInput';
 import {StyleSheet, View} from 'react-native';
-import {useQuery, useMutation} from '@apollo/client';
-import {
-  REQUEST_CREATE_FAMILY,
-  REQUEST_CREATE_FAMILY_MEMBER,
-} from '../graphql/mutations/familyMember/createFamily';
-
-import {REQUEST_GET_FAMILIES} from '../graphql/query/getFamilies';
-import {REQUEST_GET_INVITES_BY_EMAIL} from '../graphql/query/getInvites';
-import {REQUEST_UPDATE_INVITE_STATUS} from '../graphql/mutations/invites/updateInviteStatus';
-import {REQUEST_DELETE_INVITE} from '../graphql/mutations/invites/deleteInvite';
-
-import {useAuth, SELECT_FAMILY} from '../context/userContext';
-import {theme} from '../core/theme';
-
 import {
   Portal,
   Modal,
@@ -30,10 +20,31 @@ import {
   IconButton,
 } from 'react-native-paper';
 import Loader from '../components/Loader';
+import {theme} from '../core/theme';
+//End of UI components import
 
+//GraphQL Client import
+import {useQuery, useMutation} from '@apollo/client';
+import {
+  REQUEST_CREATE_FAMILY,
+  REQUEST_CREATE_FAMILY_MEMBER,
+} from '../graphql/mutations/familyMember/createFamily';
+import {REQUEST_GET_FAMILIES} from '../graphql/query/getFamilies';
+import {REQUEST_GET_INVITES_BY_EMAIL} from '../graphql/query/getInvites';
+import {REQUEST_UPDATE_INVITE_STATUS} from '../graphql/mutations/invites/updateInviteStatus';
+import {REQUEST_DELETE_INVITE} from '../graphql/mutations/invites/deleteInvite';
+//End of GraphQL Client import
+
+//React Context import
+import {useAuth, SELECT_FAMILY} from '../context/userContext';
+//End of React Context import
+
+//Validator util import
 import {nameValidator} from '../core/utils';
+//End of validator util import
 
 const FamiliesScreen = ({navigation}) => {
+  //Core States declaration
   const {state, dispatch} = useAuth();
 
   const [isFamilyListSelected, setIsFamilyListSelected] = useState(true);
@@ -51,7 +62,9 @@ const FamiliesScreen = ({navigation}) => {
   });
   const [modalIsVisible, setModalIsVisible] = useState(false);
   const [familyNameErrorText, setFamilyNameErrorText] = useState('');
+  //End of Core States declaration
 
+  //Core Tabs & Modals handler declaration
   const handleSwitchToFamilyTab = () => {
     setIsFamilyListSelected(true);
     setIsInvitationListSelected(false);
@@ -63,19 +76,75 @@ const FamiliesScreen = ({navigation}) => {
   };
   const showModal = () => setModalIsVisible(true);
   const hideModal = () => setModalIsVisible(false);
+  //End of Core Tabs & Modals handler declaration
 
+  //Create new family handler declaration
   const handleNewFamilyChange = (event) => {
     setFamilyNameErrorText('');
     setNewFamily((previousState) => {
       return {...previousState, name: event};
     });
   };
+  //End of Create new family handler declaration
 
+  //Select existing family handler declaration
   const handleSelectFamily = (family) => {
     dispatch({type: SELECT_FAMILY, payload: family});
     navigation.replace('Home');
   };
+  //Select existing family handler declaration
 
+  //Invites handlers declaration
+  const handleApproveInvite = async (invite) => {
+    try {
+      await requestUpdateInviteStatusMutation({
+        variables: {
+          id: invite.id,
+          status: true,
+        },
+      });
+      await requestCreateFamilyMemberMutation({
+        variables: {
+          userid: state.user.id,
+          familyid: invite.familyMember.family.id,
+          role: 'Member',
+        },
+      });
+      return navigation.navigate('Home');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+  const handleDeleteInvite = async (invite) => {
+    try {
+      await requestDeleteInviteMutation({
+        variables: {id: invite.id},
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //End of Invites handlers declaration
+
+  //Create Family handler declaration
+  const requestCreateFamily = async () => {
+    const familyNameError = nameValidator(newFamily.name);
+    if (familyNameError) {
+      return setFamilyNameErrorText(familyNameError);
+    }
+    try {
+      await requestCreateFamilyMutation();
+      await requestCreateFamilyMemberMutation();
+      hideModal();
+      return navigation.navigate('Home');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //End of Create Family handler declaration
+
+  //Core GraphQL Mutations declaration
   const [
     requestCreateFamilyMutation,
     {loading: requestCreateFamilyLoading},
@@ -134,53 +203,9 @@ const FamiliesScreen = ({navigation}) => {
       },
     },
   );
-
-  const handleApproveInvite = async (invite) => {
-    try {
-      await requestUpdateInviteStatusMutation({
-        variables: {
-          id: invite.id,
-          status: true,
-        },
-      });
-      await requestCreateFamilyMemberMutation({
-        variables: {
-          userid: state.user.id,
-          familyid: invite.familyMember.family.id,
-          role: 'Member',
-        },
-      });
-      return navigation.navigate('Home');
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleDeleteInvite = async (invite) => {
-    try {
-      await requestDeleteInviteMutation({
-        variables: {id: invite.id},
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const requestCreateFamily = async () => {
-    const familyNameError = nameValidator(newFamily.name);
-    if (familyNameError) {
-      return setFamilyNameErrorText(familyNameError);
-    }
-    try {
-      await requestCreateFamilyMutation();
-      await requestCreateFamilyMemberMutation();
-      hideModal();
-      return navigation.navigate('Home');
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
+  //End of Core GraphQL Mutations declaration
+  
+  //Get Families useQuery GraphQL Component
   const GetFamilies = () => {
     const {loading, error, data} = useQuery(REQUEST_GET_FAMILIES, {
       variables: {userid: state.user.id},
@@ -208,15 +233,15 @@ const FamiliesScreen = ({navigation}) => {
       </Button>
     ));
   };
+  //End of Get Families useQuery GraphQL Component
 
+  //Get Invites useQuery GraphQL Component
   const GetInvites = () => {
-    console.log(state.user.email);
     const {loading, error, data} = useQuery(REQUEST_GET_INVITES_BY_EMAIL, {
       variables: {email: state.user.email},
     });
     if (loading) return <Loader loading={loading} />;
     if (error) return null;
-    console.log(data.invites);
     if (data.invites.length == 0)
       return (
         <Text
@@ -256,7 +281,9 @@ const FamiliesScreen = ({navigation}) => {
       </Card>
     ));
   };
+  //End of Get Families useQuery GraphQL Component
 
+  //Core Component return
   return (
     <Background>
       <Loader loading={requestCreateFamilyLoading} />
@@ -343,6 +370,7 @@ const FamiliesScreen = ({navigation}) => {
       </Button>
     </Background>
   );
+  //End of Core Component return
 };
 
 const styles = StyleSheet.create({

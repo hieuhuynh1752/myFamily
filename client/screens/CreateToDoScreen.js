@@ -1,32 +1,26 @@
-import React, {useState, useEffect} from 'react';
-import {
-  Appbar,
-  Card,
-  Chip,
-  TextInput,
-  Avatar,
-  Button,
-  Menu,
-} from 'react-native-paper';
+//React import
+import React, {useState} from 'react';
+//End of React import
+
+//UI Components import
+import {Appbar, Card, Chip, TextInput, Avatar} from 'react-native-paper';
 import {theme} from '../core/theme';
-import {
-  ImageBackground,
-  StyleSheet,
-  ScrollView,
-  Keyboard,
-  View,
-} from 'react-native';
+import {ImageBackground, StyleSheet, ScrollView, View} from 'react-native';
+import Loader from '../components/Loader';
+//End of UI Components import
+
+//React Context import
 import {useAuth} from '../context/userContext';
+//End of React Context import
 
-import Paragraph from '../components/Paragraph';
-
+//GraphQL Client import
 import {useMutation} from '@apollo/client';
 import {REQUEST_CREATE_TO_DO} from '../graphql/mutations/todos/createToDo';
 import {TODOS_FRAGMENT} from '../graphql/fragments/todosFragment';
-
-import Loader from '../components/Loader';
+//End of GraphQL Client import
 
 const CreateToDoScreen = ({navigation}) => {
+  //Core States declaration
   const {state} = useAuth();
 
   const [taskTitle, setTaskTitle] = useState('');
@@ -36,7 +30,9 @@ const CreateToDoScreen = ({navigation}) => {
   const [selectedMember, setSelectedMember] = useState('');
 
   const [memberIsAssigned, setMemberIsAssigned] = useState(false);
+  //End of Core States declaration
 
+  //Core Task state handlers declaration
   const handleTaskTitleChange = (event) => {
     setTaskTitle(event);
   };
@@ -71,7 +67,9 @@ const CreateToDoScreen = ({navigation}) => {
       console.log(error);
     }
   };
+  //End of Core Task state handlers declaration
 
+  //GraphQL Create To Do Task Mutation declaration
   const [
     requestCreateToDoMutation,
     {loading: requestCreateToDoLoading},
@@ -90,7 +88,9 @@ const CreateToDoScreen = ({navigation}) => {
       });
     },
   });
+  //End of GraphQL Create To Do Task Mutation declaration
 
+  //FamilyMemberChips Component declaration
   const RenderFamilyMembersChips = () => {
     if (!memberIsAssigned)
       return (
@@ -147,11 +147,11 @@ const CreateToDoScreen = ({navigation}) => {
                 style={styles.selectedChip}
                 icon={() => (
                   <Avatar.Icon
-                  icon="check"
-                  color={theme.colors.surface}
-                  style={{backgroundColor: '#056676'}}
-                  size={24}
-                />
+                    icon="check"
+                    color={theme.colors.surface}
+                    style={{backgroundColor: '#056676'}}
+                    size={24}
+                  />
                 )}>
                 {member.user.name}
               </Chip>
@@ -160,7 +160,9 @@ const CreateToDoScreen = ({navigation}) => {
         </>
       );
   };
+  //End of FamilyMemberChips Component declaration
 
+  //Core Component return
   return (
     <ImageBackground
       source={require('../assets/background_dot.png')}
@@ -180,7 +182,7 @@ const CreateToDoScreen = ({navigation}) => {
         />
         <Appbar.Action
           icon="check"
-          disabled={taskTitle===""||selectedMember===""}
+          disabled={taskTitle === '' || selectedMember === ''}
           onPress={() => {
             handleSubmitCreateToDo();
           }}
@@ -212,6 +214,7 @@ const CreateToDoScreen = ({navigation}) => {
       </ScrollView>
     </ImageBackground>
   );
+  //End of Core Component return
 };
 
 export default CreateToDoScreen;

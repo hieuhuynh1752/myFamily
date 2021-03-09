@@ -1,4 +1,6 @@
+//React import
 import React, {useState, useEffect} from 'react';
+//End of React import
 
 //import UI components
 import Loader from '../components/Loader';
@@ -8,10 +10,9 @@ import {Button, Menu} from 'react-native-paper';
 import {ImageBackground, StyleSheet, ScrollView, View} from 'react-native';
 import {Portal, Modal, Card, Divider, Text} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
+import {theme} from '../core/theme';
 //end of UI components imports
 
-//import theme
-import {theme} from '../core/theme';
 
 //import graphql queries, mutations & fragments
 import {useQuery, useMutation} from '@apollo/client';
@@ -24,14 +25,15 @@ import {REQUEST_DELETE_LIKE} from '../graphql/mutations/posts/deleteLike';
 import {
   POSTS_FRAGMENT,
   NEW_LIKE_FRAGMENT,
-  NEW_COMMENT_FRAGMENT,
 } from '../graphql/fragments/postsFragment';
 //end of graphql imports
 
-//import user context
+//React Context import
 import {useAuth} from '../context/userContext';
+//end of React Context import
 
 const PostScreen = ({navigation}) => {
+  //Core States declaration
   const {state} = useAuth();
   const [newPost, setNewPost] = useState({
     memberid: state.memberId,
@@ -39,7 +41,9 @@ const PostScreen = ({navigation}) => {
   });
 
   const memberIds = state.members.map((member) => member.id);
+  //End of Core States declaration
 
+  //Core GraphQL Mutations declaration
   const [
     requestCreatePostMutation,
     {loading: requestCreatePostLoading},
@@ -59,6 +63,14 @@ const PostScreen = ({navigation}) => {
     },
     variables: newPost,
   });
+  //End of Core GraphQL Mutations declaration
+
+  //Post handlers declaration
+  const handlePostChange = (event) => {
+    setNewPost((previousState) => {
+      return {...previousState, content: event};
+    });
+  };
 
   const requestCreatePost = async () => {
     try {
@@ -73,7 +85,9 @@ const PostScreen = ({navigation}) => {
       console.log(error);
     }
   };
+  //End of Post handlers declaration
 
+  //Get All Posts based on useQuery GraphQL Component
   const GetPosts = () => {
     const {loading, error, data} = useQuery(REQUEST_GET_POSTS, {
       variables: {membersid: memberIds},
@@ -81,6 +95,7 @@ const PostScreen = ({navigation}) => {
     if (loading) return <Loader loading={loading} />;
     if (error) return null;
     
+    //Like Button Component for Post Component
     const LikeButton = ({like, postId, post}) => {
       const [isLiked, setIsLiked] = useState(false);
       const [likeId, setLikeId] = useState(0);
@@ -161,7 +176,9 @@ const PostScreen = ({navigation}) => {
 
       return likeButton;
     };
+    //End of Like Button Component for Post Component
 
+    //Action Buttons Component for Post Component
     const ActionButtons = ({memberId, postId, content}) => {
       if (state.role !== 'Admin' && memberId !== state.memberId) return null;
       const [visible, setVisible] = useState(false);
@@ -366,6 +383,8 @@ const PostScreen = ({navigation}) => {
         </>
       );
     };
+    //End of Action Buttons Component for Post Component
+
     return data.posts.map((post) => (
       <Card key={post.id} style={styles.container}>
         <Card.Title
@@ -402,18 +421,14 @@ const PostScreen = ({navigation}) => {
       </Card>
     ));
   };
-
-  const handlePostChange = (event) => {
-    setNewPost((previousState) => {
-      return {...previousState, content: event};
-    });
-  };
+  //End of Get All Post based on useQuery GraphQL Component
+  
 
   return (
     <ImageBackground
       source={require('../assets/background_dot.png')}
       resizeMode="repeat"
-      style={{flex: 1, width: '100%', backgroundColor: theme.colors.secondary}}>
+      style={{flex: 1, width: '100%', backgroundColor: theme.colors.primary}}>
       <ScrollView>
         <Card style={styles.container}>
           <Card.Content>
