@@ -110,7 +110,7 @@ const FamiliesScreen = ({navigation}) => {
           role: 'Member',
         },
       });
-      return navigation.navigate('Home');
+      await navigation.navigate('Home');
     } catch (error) {
       console.log(error);
     }

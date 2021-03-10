@@ -78,6 +78,10 @@ const LoginScreen = ({navigation}) => {
     }
     try {
       await requestLoginMutation();
+      setAccountValues({
+        username: '',
+        password: '',
+      });
       navigation.navigate('Families');
     } catch (error) {
       console.log(error);

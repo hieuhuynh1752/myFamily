@@ -320,9 +320,9 @@ const EventDetailsScreen = ({route, navigation}) => {
     endTime,
   ]);
   //End of useEffect for Event States Listener to prevent creating bad-behavior data
-
+  
   //return Component if the user is Admin or the creator of the Event
-  if (state.role === 'Admin' || memberId === state.memberId)
+  if (state.role === 'Admin' || event.familyMember.id === state.memberId)
     return (
       <ImageBackground
         source={require('../assets/background_dot.png')}

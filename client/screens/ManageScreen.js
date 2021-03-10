@@ -1,7 +1,7 @@
 //React import
 import React, {useState} from 'react';
 //End React import
-
+import {withApollo} from '@apollo/client/react/hoc'
 //UI Components import
 import {
   Text,
@@ -39,7 +39,9 @@ import {REQUEST_DELETE_FAMILY_MEMBER} from '../graphql/mutations/familyMember/de
 import {INVITES_FRAGMENT} from '../graphql/fragments/invitesFragment';
 //End GraphQL Client import
 
-const ManageScreen = ({navigation}) => {
+import AsyncStorage from '@react-native-community/async-storage'
+
+const ManageScreen = ({navigation,client}) => {
   //Core States declaration
   const {state, dispatch} = useAuth();
   const memberIds = state.members.map((member) => member.id);
@@ -100,9 +102,11 @@ const ManageScreen = ({navigation}) => {
   //End of GraphQL Mutation's Executors declaration
 
   //Logout handler declaration
-  const handleLogout = () => {
+  const handleLogout = async() => {
     dispatch({type: LOGOUT});
-    return navigation.dangerouslyGetParent().navigate('Auth');
+    await AsyncStorage.removeItem('@userInfo');
+    await client.cache.reset();
+    await navigation.navigate('Login');
   };
   //End of Logout handler declaration
 
@@ -639,7 +643,6 @@ const ManageScreen = ({navigation}) => {
           )}
           onPress={() => {
             navigation.navigate('Families');
-            //navigation.dangerouslyGetParent().navigate('Families');
           }}
           titleStyle={{color: '#ffffff'}}
           style={{backgroundColor: '#f05454'}}
@@ -803,4 +806,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ManageScreen;
+export default withApollo(ManageScreen);

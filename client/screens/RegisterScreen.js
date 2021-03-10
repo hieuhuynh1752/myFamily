@@ -10,7 +10,7 @@ import Header from '../components/Header';
 import Button from '../components/Button';
 import TextInput from '../components/TextInput';
 import BackButton from '../components/BackButton';
-import { theme } from '../core/theme';
+import {theme} from '../core/theme';
 import Loader from '../components/Loader';
 import Paragraph from '../components/Paragraph';
 //End of UI components import
@@ -18,7 +18,7 @@ import Paragraph from '../components/Paragraph';
 //GraphQL Client import
 import {useMutation} from '@apollo/client';
 import {REQUEST_REGISTER} from '../graphql/mutations/authentication/register';
-import {useAuth,REGISTER} from '../context/userContext';
+import {useAuth, REGISTER} from '../context/userContext';
 //End of GraphQL Client import
 
 //Validator utils import
@@ -28,31 +28,31 @@ import {emailValidator, passwordValidator, nameValidator} from '../core/utils';
 const RegisterScreen = ({navigation}) => {
   //Core States declaration
   const {state, dispatch} = useAuth();
-    
+
   const [accountValues, setAccountValues] = useState({
     name: '',
-    email:'',
+    email: '',
     password: '',
-    password_confirmation:''
+    password_confirmation: '',
   });
 
   const [errorText, setErrorText] = useState('');
-  const [emailErrorText, setEmailErrorText] = useState('')
-  const [nameErrorText, setNameErrorText] = useState('')
-  const [passwordErrorText, setPasswordErrorText] = useState('')
-  const [passwordConfirmErrorText, setPasswordConfirmErrorText] = useState('')
+  const [emailErrorText, setEmailErrorText] = useState('');
+  const [nameErrorText, setNameErrorText] = useState('');
+  const [passwordErrorText, setPasswordErrorText] = useState('');
+  const [passwordConfirmErrorText, setPasswordConfirmErrorText] = useState('');
   //End of Core States declaration
 
   //Core GraphQL Mutations declaration
-  const [requestRegisterMutation, {loading: requestRegisterLoading}] = useMutation(
-    REQUEST_REGISTER,
-    {
-      update(proxy, {data: userData}) {
-        dispatch({type: REGISTER, payload: userData.register.tokens});
-      },
-      variables: accountValues,
+  const [
+    requestRegisterMutation,
+    {loading: requestRegisterLoading},
+  ] = useMutation(REQUEST_REGISTER, {
+    update(proxy, {data: userData}) {
+      dispatch({type: REGISTER, payload: userData.register.tokens});
     },
-  );
+    variables: accountValues,
+  });
   //Core GraphQL Mutations declaration
 
   //Core State handlers declaration
@@ -84,8 +84,8 @@ const RegisterScreen = ({navigation}) => {
     const nameError = nameValidator(accountValues.name);
     const emailError = emailValidator(accountValues.email);
     const passwordError = passwordValidator(accountValues.password);
-    
-    if(nameError){
+
+    if (nameError) {
       return setNameErrorText(nameError);
     }
     if (emailError) {
@@ -94,11 +94,19 @@ const RegisterScreen = ({navigation}) => {
     if (passwordError) {
       return setPasswordErrorText(passwordError);
     }
-    if (accountValues.password_confirmation!==accountValues.password) {
-      return setPasswordConfirmErrorText('Oops, your Password & Password Confirm are not the same!');
+    if (accountValues.password_confirmation !== accountValues.password) {
+      return setPasswordConfirmErrorText(
+        'Oops, your Password & Password Confirm are not the same!',
+      );
     }
     try {
       await requestRegisterMutation();
+      setAccountValues({
+        name: '',
+        email: '',
+        password: '',
+        password_confirmation: '',
+      });
       navigation.navigate('Families');
     } catch (error) {
       console.log(error.message);
@@ -110,20 +118,18 @@ const RegisterScreen = ({navigation}) => {
   return (
     <Background>
       <BackButton goBack={() => navigation.navigate('LoginScreen')} />
-        <Loader loading={requestRegisterLoading} />
+      <Loader loading={requestRegisterLoading} />
 
       <Logo />
 
       <Header>Create Account</Header>
-      <Paragraph color={theme.colors.error}>
-          {errorText}
-        </Paragraph>
+      <Paragraph color={theme.colors.error}>{errorText}</Paragraph>
       <TextInput
         label="Name"
         returnKeyType="next"
         value={accountValues.name}
         onChangeText={handleUsernameChange}
-        error={nameErrorText!==''}
+        error={nameErrorText !== ''}
         errorText={nameErrorText}
       />
 
@@ -132,7 +138,7 @@ const RegisterScreen = ({navigation}) => {
         returnKeyType="next"
         value={accountValues.email}
         onChangeText={handleEmailChange}
-        error={emailErrorText!==''}
+        error={emailErrorText !== ''}
         errorText={emailErrorText}
         autoCapitalize="none"
         autoCompleteType="email"
@@ -144,7 +150,7 @@ const RegisterScreen = ({navigation}) => {
         returnKeyType="next"
         value={accountValues.password}
         onChangeText={handlePasswordChange}
-        error={passwordErrorText!==''}
+        error={passwordErrorText !== ''}
         errorText={passwordErrorText}
         secureTextEntry
       />
@@ -153,7 +159,7 @@ const RegisterScreen = ({navigation}) => {
         returnKeyType="done"
         value={accountValues.password_confirmation}
         onChangeText={handlePasswordConfirmChange}
-        error={passwordConfirmErrorText!==''}
+        error={passwordConfirmErrorText !== ''}
         errorText={passwordConfirmErrorText}
         secureTextEntry
       />

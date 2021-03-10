@@ -62,7 +62,7 @@ const CreateToDoScreen = ({navigation}) => {
           is_completed: false,
         },
       });
-      navigation.navigate('ToDo');
+      navigation.navigate('Tasks');
     } catch (error) {
       console.log(error);
     }
