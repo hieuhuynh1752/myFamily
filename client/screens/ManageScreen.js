@@ -1,7 +1,7 @@
 //React import
 import React, {useState} from 'react';
 //End React import
-import {withApollo} from '@apollo/client/react/hoc'
+import {withApollo} from '@apollo/client/react/hoc';
 //UI Components import
 import {
   Text,
@@ -18,6 +18,7 @@ import {
 } from 'react-native-paper';
 import {ImageBackground, StyleSheet, ScrollView, View} from 'react-native';
 import Loader from '../components/Loader';
+import PrivacyPolicyContent from '../components/PrivacyPolicy'
 import Icon from 'react-native-vector-icons/Feather';
 import {theme} from '../core/theme';
 //End UI Components import
@@ -39,9 +40,11 @@ import {REQUEST_DELETE_FAMILY_MEMBER} from '../graphql/mutations/familyMember/de
 import {INVITES_FRAGMENT} from '../graphql/fragments/invitesFragment';
 //End GraphQL Client import
 
-import AsyncStorage from '@react-native-community/async-storage'
+//AsyncStorage import
+import AsyncStorage from '@react-native-community/async-storage';
+//End of AsyncStorage import
 
-const ManageScreen = ({navigation,client}) => {
+const ManageScreen = ({navigation, client}) => {
   //Core States declaration
   const {state, dispatch} = useAuth();
   const memberIds = state.members.map((member) => member.id);
@@ -49,6 +52,9 @@ const ManageScreen = ({navigation,client}) => {
   const [addMemberVisible, setAddMemberVisible] = useState(false);
 
   const [leaveFamilyVisible, setLeaveFamilyVisible] = useState(false);
+  const [aboutUsVisible, setAboutUsVisible] = useState(false);
+  const [policyVisible, setPolicyVisible] = useState(false);
+  const [helpVisible, setHelpVisible] = useState(false);
   //End of Core States declaration
 
   //Core Modals handler declaration
@@ -57,6 +63,15 @@ const ManageScreen = ({navigation,client}) => {
 
   const openLeaveFamilyModal = () => setLeaveFamilyVisible(true);
   const closeLeaveFamilyModal = () => setLeaveFamilyVisible(false);
+
+  const openAboutUsModal = () => setAboutUsVisible(true);
+  const closeAboutUsModal = () => setAboutUsVisible(false);
+
+  const openPolicyModal = () => setPolicyVisible(true);
+  const closePolicyModal = () => setPolicyVisible(false);
+
+  const openHelpModal = () => setHelpVisible(true);
+  const closeHelpModal = () => setHelpVisible(false);
   //End of core Modals handler declaration
 
   //Core GraphQL Mutations declaration
@@ -102,7 +117,7 @@ const ManageScreen = ({navigation,client}) => {
   //End of GraphQL Mutation's Executors declaration
 
   //Logout handler declaration
-  const handleLogout = async() => {
+  const handleLogout = async () => {
     dispatch({type: LOGOUT});
     await AsyncStorage.removeItem('@userInfo');
     await client.cache.reset();
@@ -576,203 +591,296 @@ const ManageScreen = ({navigation,client}) => {
         width: '100%',
         backgroundColor: '#bbbfca',
       }}>
-      <View style={{height: 120, backgroundColor: '#e8e8e8', elevation: 5}}>
-        <ScrollView horizontal={true}>
-          <Card
-            style={{
-              elevation: 0,
-              width: 85,
-              height: 120,
-              alignItems: 'center',
-              backgroundColor: '#e8e8e8',
-            }}>
-            <Card.Content>
-              <IconButton
-                onPress={openAddMemberModal}
-                size={40}
-                icon="plus"
+      <ScrollView>
+        <View style={{height: 120, backgroundColor: '#e8e8e8', elevation: 5}}>
+          <ScrollView horizontal={true}>
+            <Card
+              style={{
+                elevation: 0,
+                width: 85,
+                height: 120,
+                alignItems: 'center',
+                backgroundColor: '#e8e8e8',
+              }}>
+              <Card.Content>
+                <IconButton
+                  onPress={openAddMemberModal}
+                  size={40}
+                  icon="plus"
+                  color="#ffffff"
+                  style={{
+                    backgroundColor: '#7579e7',
+                    elevation: 5,
+                    marginBottom: 5,
+                    marginTop: -2,
+                    marginHorizontal: 2,
+                  }}
+                />
+                <Text
+                  style={{
+                    alignSelf: 'center',
+                    fontWeight: '800',
+                    marginHorizontal: 3,
+                  }}>
+                  Add new member
+                </Text>
+              </Card.Content>
+            </Card>
+            <GetInvitedMembers />
+            {state.members.map((member) => (
+              <MemberInfoAndActions member={member} key={member.id} />
+            ))}
+          </ScrollView>
+        </View>
+        <Card
+          style={{
+            width: '100%',
+            alignSelf: 'center',
+            elevation: 6,
+            marginTop: 16,
+          }}>
+          <List.Item
+            title="Switch family"
+            left={() => (
+              <Icon
+                name="refresh-cw"
+                size={23}
                 color="#ffffff"
-                style={{
-                  backgroundColor: '#7579e7',
-                  elevation: 5,
-                  marginBottom: 5,
-                  marginTop: -2,
-                  marginHorizontal: 2,
-                }}
+                style={{marginVertical: 10, marginHorizontal: 15}}
               />
-              <Text
-                style={{
-                  alignSelf: 'center',
-                  fontWeight: '800',
-                  marginHorizontal: 3,
-                }}>
-                Add new member
-              </Text>
-            </Card.Content>
-          </Card>
-          <GetInvitedMembers />
-          {state.members.map((member) => (
-            <MemberInfoAndActions member={member} key={member.id} />
-          ))}
-        </ScrollView>
-      </View>
-      <Card
-        style={{
-          width: '100%',
-          alignSelf: 'center',
-          elevation: 6,
-          marginTop: 16,
-        }}>
-        <List.Item
-          title="Switch family"
-          left={() => (
-            <Icon
-              name="refresh-cw"
-              size={23}
-              color="#ffffff"
-              style={{marginVertical: 10, marginHorizontal: 15}}
-            />
-          )}
-          right={() => (
-            <Icon
-              name="chevron-right"
-              size={23}
-              color="#ffffff"
-              style={{marginVertical: 10, marginHorizontal: 15}}
-            />
-          )}
-          onPress={() => {
-            navigation.navigate('Families');
-          }}
-          titleStyle={{color: '#ffffff'}}
-          style={{backgroundColor: '#f05454'}}
-        />
-      </Card>
-      <Card
-        style={{
-          width: '100%',
-          alignSelf: 'center',
-          elevation: 6,
-          marginTop: 16,
-        }}>
-        <List.Item
-          title="About us"
-          left={() => (
-            <Icon
-              name="info"
-              size={23}
-              style={{marginVertical: 10, marginHorizontal: 15}}
-            />
-          )}
-          onPress={() => {}}
-        />
-        <Divider style={{height: 2}} />
-        <List.Item
-          title="Policy"
-          left={() => (
-            <Icon
-              name="pocket"
-              size={23}
-              style={{marginVertical: 10, marginHorizontal: 15}}
-            />
-          )}
-          onPress={() => {}}
-        />
-        <Divider style={{height: 2}} />
-        <List.Item
-          title="Help"
-          left={() => (
-            <Icon
-              name="flag"
-              size={23}
-              style={{marginVertical: 10, marginHorizontal: 15}}
-            />
-          )}
-          onPress={() => {}}
-        />
-      </Card>
-      <Card
-        style={{
-          width: '90%',
-          alignSelf: 'center',
-          elevation: 6,
-          marginTop: 16,
-        }}>
-        <Card.Content>
-          <Button
-            mode="contained"
+            )}
+            right={() => (
+              <Icon
+                name="chevron-right"
+                size={23}
+                color="#ffffff"
+                style={{marginVertical: 10, marginHorizontal: 15}}
+              />
+            )}
+            onPress={() => {
+              navigation.navigate('Families');
+            }}
+            titleStyle={{color: '#ffffff'}}
+            style={{backgroundColor: '#f05454'}}
+          />
+        </Card>
+        <Card
+          style={{
+            width: '100%',
+            alignSelf: 'center',
+            elevation: 6,
+            marginTop: 16,
+          }}>
+          <List.Item
+            title="About us"
+            left={() => (
+              <Icon
+                name="info"
+                size={23}
+                style={{marginVertical: 10, marginHorizontal: 15}}
+              />
+            )}
+            onPress={() => {
+              openAboutUsModal();
+            }}
+          />
+          <Divider style={{height: 2}} />
+          <List.Item
+            title="Privacy policy"
+            left={() => (
+              <Icon
+                name="pocket"
+                size={23}
+                style={{marginVertical: 10, marginHorizontal: 15}}
+              />
+            )}
+            onPress={() => {
+              openPolicyModal();
+            }}
+          />
+          <Divider style={{height: 2}} />
+          <List.Item
+            title="Help"
+            left={() => (
+              <Icon
+                name="flag"
+                size={23}
+                style={{marginVertical: 10, marginHorizontal: 15}}
+              />
+            )}
+            onPress={() => {
+              openHelpModal();
+            }}
+          />
+        </Card>
+        <Card
+          style={{
+            width: '100%',
+            alignSelf: 'center',
+            elevation: 6,
+            marginTop: 16,
+          }}>
+          <List.Item
+            title="Leave this family"
+            left={() => (
+              <Icon
+                name="x-octagon"
+                size={23}
+                style={{marginVertical: 10, marginHorizontal: 15}}
+                color="#ffffff"
+              />
+            )}
             onPress={() => {
               openLeaveFamilyModal();
             }}
-            color="#e40017"
-            style={{width: '90%', alignSelf: 'center', elevation: 8}}>
-            <Text style={{color: '#ffffff'}}>Leave this Family</Text>
-          </Button>
-          <Button
-            mode="contained"
+            titleStyle={{color: '#ffffff'}}
+            style={{backgroundColor: '#e40017'}}
+          />
+          <Divider style={{height: 2}} />
+          <List.Item
+            title="Log out"
+            left={() => (
+              <Icon
+                name="log-out"
+                size={23}
+                style={{marginVertical: 10, marginHorizontal: 15}}
+                color="#e40017"
+              />
+            )}
             onPress={() => {
               handleLogout();
             }}
-            color="#ffffff"
-            style={{
-              width: '90%',
-              alignSelf: 'center',
-              elevation: 6,
-              marginTop: 16,
-            }}>
-            <Text style={{color: '#e40017'}}>Logout</Text>
-          </Button>
-        </Card.Content>
-      </Card>
-      <Portal>
-        <Modal
-          visible={leaveFamilyVisible}
-          onDismiss={closeLeaveFamilyModal}
+            titleStyle={{color: '#e40017'}}
+          />
+        </Card>
+        <Portal>
+          <Modal
+          visible={aboutUsVisible}
+          onDismiss={closeAboutUsModal}
           contentContainerStyle={{
             backgroundColor: 'white',
             padding: 20,
             width: '80%',
+            alignSelf: 'center',}}>
+              <Text
+              style={{
+                fontSize: 19,
+                fontWeight: '900',
+              }}>
+              About us
+            </Text>
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: '500',
+                marginVertical: 9,
+              }}>
+              myFamily is developed to pursue the Final Year Project of the University of Greenwich's Bachelor Degree in Computing 
+            </Text>
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: '500',
+                marginVertical: 9,
+              }}>
+              myFamily brought to you by our dedicated & heartfelt developers: Huynh Thai Hieu, Hieu Huynh Thai, Thai Hieu Huynh 
+            </Text>
+          </Modal>
+          <Modal
+          visible={policyVisible}
+          onDismiss={closePolicyModal}
+          contentContainerStyle={{
+            backgroundColor: 'white',
+            padding: 20,
+            width: '95%',
+            height:'90%',
             alignSelf: 'center',
           }}>
-          <Text
-            style={{
-              fontSize: 19,
-              fontWeight: '900',
-            }}>
-            Leave this family
-          </Text>
-          <Divider style={{marginVertical: 9}} />
-          <Text
-            style={{
-              fontSize: 16,
-              fontWeight: '500',
-              marginVertical: 9,
-            }}>
-            Are you sure you want to leave this family? Your data in this Family
-            will be lost.
-          </Text>
-          <Divider style={{marginVertical: 9}} />
-          <View style={styles.row}>
-            <Button
-              mode="contained"
-              color={theme.colors.background}
-              style={{width: '50%'}}
-              onPress={() => {
-                closeLeaveFamilyModal();
+            <ScrollView>
+              <PrivacyPolicyContent/>
+            </ScrollView>
+          </Modal>
+          <Modal
+          visible={helpVisible}
+          onDismiss={closeHelpModal}
+          contentContainerStyle={{
+            backgroundColor: 'white',
+            padding: 20,
+            width: '80%',
+            alignSelf: 'center',}}>
+              <Text
+              style={{
+                fontSize: 19,
+                fontWeight: '900',
               }}>
-              Cancel
-            </Button>
-            <Button
-              mode="contained"
-              color={theme.colors.notification}
-              style={{width: '50%'}}
-              loading={requestLeaveFamilyLoading}
-              onPress={requestLeaveFamily}>
-              Leave
-            </Button>
-          </View>
-        </Modal>
-      </Portal>
+              Help
+            </Text>
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: '500',
+                marginVertical: 9,
+              }}>
+              For any issues or comments, please contact to our Customer Service via this email: thaihieuhuynh1752@gmail.com
+            </Text>
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: '500',
+                marginVertical: 9,
+              }}>
+              Thank you!
+            </Text>
+          </Modal>
+          <Modal
+            visible={leaveFamilyVisible}
+            onDismiss={closeLeaveFamilyModal}
+            contentContainerStyle={{
+              backgroundColor: 'white',
+              padding: 20,
+              width: '80%',
+              alignSelf: 'center',
+            }}>
+            <Text
+              style={{
+                fontSize: 19,
+                fontWeight: '900',
+              }}>
+              Leave this family
+            </Text>
+            <Divider style={{marginVertical: 9}} />
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: '500',
+                marginVertical: 9,
+              }}>
+              Are you sure you want to leave this family? Your data in this
+              Family will be lost.
+            </Text>
+            <Divider style={{marginVertical: 9}} />
+            <View style={styles.row}>
+              <Button
+                mode="contained"
+                color={theme.colors.background}
+                style={{width: '50%'}}
+                onPress={() => {
+                  closeLeaveFamilyModal();
+                }}>
+                Cancel
+              </Button>
+              <Button
+                mode="contained"
+                color={theme.colors.notification}
+                style={{width: '50%'}}
+                loading={requestLeaveFamilyLoading}
+                onPress={requestLeaveFamily}>
+                Leave
+              </Button>
+            </View>
+          </Modal>
+        </Portal>
+      </ScrollView>
     </ImageBackground>
   );
   //End of Core component return
