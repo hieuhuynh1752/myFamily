@@ -14,6 +14,7 @@ import {
   Text,
   Modal,
   Portal,
+  Divider
 } from 'react-native-paper';
 import {theme} from '../core/theme';
 import {ImageBackground, StyleSheet, ScrollView, View} from 'react-native';
@@ -320,7 +321,7 @@ const EventDetailsScreen = ({route, navigation}) => {
     endTime,
   ]);
   //End of useEffect for Event States Listener to prevent creating bad-behavior data
-  
+
   //return Component if the user is Admin or the creator of the Event
   if (state.role === 'Admin' || event.familyMember.id === state.memberId)
     return (
@@ -855,33 +856,43 @@ const EventDetailsScreen = ({route, navigation}) => {
                     width: '80%',
                     alignSelf: 'center',
                   }}>
-                  <Card>
-                    <Card.Title
-                      title="Delete event"
-                      style={{alignSelf: 'center'}}
-                    />
-                    <Card.Content>
-                      <Paragraph>
-                        Are you sure you want to delete this event?
-                      </Paragraph>
-                      <Button
-                        mode="contained"
-                        color={theme.colors.background}
-                        disabled={requestDeleteEventLoading}
-                        onPress={() => {
-                          closeDelete();
-                        }}>
-                        Cancel
-                      </Button>
-                      <Button
-                        mode="contained"
-                        color={theme.colors.notification}
-                        loading={requestDeleteEventLoading}
-                        onPress={handleSubmitDeleteEvent}>
-                        Delete
-                      </Button>
-                    </Card.Content>
-                  </Card>
+                  <Text
+                    style={{
+                      fontSize: 19,
+                      fontWeight: '900',
+                    }}>
+                    Delete event
+                  </Text>
+                  <Divider style={{marginVertical: 9}} />
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontWeight: '500',
+                      marginVertical: 9,
+                    }}>
+                    Are you sure you want to delete this event?
+                  </Text>
+                  <Divider style={{marginVertical: 9}} />
+                  <View style={styles.row}>
+                    <Button
+                      mode="contained"
+                      color={theme.colors.background}
+                      style={{width: '50%'}}
+                      disabled={requestDeleteEventLoading}
+                      onPress={() => {
+                        closeDelete();
+                      }}>
+                      Cancel
+                    </Button>
+                    <Button
+                      mode="contained"
+                      color={theme.colors.notification}
+                      style={{width: '50%'}}
+                      loading={requestDeleteEventLoading}
+                      onPress={handleSubmitDeleteEvent}>
+                      Delete
+                    </Button>
+                  </View>
                 </Modal>
               </Portal>
             </>
