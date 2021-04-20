@@ -1,11 +1,10 @@
 //React import
-import React, {useState, createRef} from 'react';
+import React, {useState} from 'react';
 //End of React import
 
 //UI components import
-import {StyleSheet} from 'react-native';
+import {StyleSheet, ScrollView} from 'react-native';
 import Background from '../components/Background';
-import Logo from '../components/Logo';
 import Header from '../components/Header';
 import Button from '../components/Button';
 import TextInput from '../components/TextInput';
@@ -27,7 +26,7 @@ import {emailValidator, passwordValidator, nameValidator} from '../core/utils';
 
 const RegisterScreen = ({navigation}) => {
   //Core States declaration
-  const {state, dispatch} = useAuth();
+  const {dispatch} = useAuth();
 
   const [accountValues, setAccountValues] = useState({
     name: '',
@@ -116,57 +115,59 @@ const RegisterScreen = ({navigation}) => {
   //End of Core State handlers declaration
 
   return (
-    <Background>
-      <BackButton goBack={() => navigation.navigate('LoginScreen')} />
-      <Loader loading={requestRegisterLoading} />
+    <ScrollView>
+      <Background>
+        <BackButton goBack={() => navigation.navigate('LoginScreen')} />
+        <Loader loading={requestRegisterLoading} />
+        <Header>Create Account</Header>
+        <Paragraph color={theme.colors.error}>{errorText}</Paragraph>
+        <TextInput
+          label="Name"
+          returnKeyType="next"
+          value={accountValues.name}
+          onChangeText={handleUsernameChange}
+          error={nameErrorText !== ''}
+          errorText={nameErrorText}
+        />
 
-      <Logo />
-
-      <Header>Create Account</Header>
-      <Paragraph color={theme.colors.error}>{errorText}</Paragraph>
-      <TextInput
-        label="Name"
-        returnKeyType="next"
-        value={accountValues.name}
-        onChangeText={handleUsernameChange}
-        error={nameErrorText !== ''}
-        errorText={nameErrorText}
-      />
-
-      <TextInput
-        label="Email"
-        returnKeyType="next"
-        value={accountValues.email}
-        onChangeText={handleEmailChange}
-        error={emailErrorText !== ''}
-        errorText={emailErrorText}
-        autoCapitalize="none"
-        autoCompleteType="email"
-        textContentType="emailAddress"
-        keyboardType="email-address"
-      />
-      <TextInput
-        label="Password"
-        returnKeyType="next"
-        value={accountValues.password}
-        onChangeText={handlePasswordChange}
-        error={passwordErrorText !== ''}
-        errorText={passwordErrorText}
-        secureTextEntry
-      />
-      <TextInput
-        label="Password Confirm"
-        returnKeyType="done"
-        value={accountValues.password_confirmation}
-        onChangeText={handlePasswordConfirmChange}
-        error={passwordConfirmErrorText !== ''}
-        errorText={passwordConfirmErrorText}
-        secureTextEntry
-      />
-      <Button mode="contained" onPress={requestRegister} style={styles.button}>
-        Sign Up
-      </Button>
-    </Background>
+        <TextInput
+          label="Email"
+          returnKeyType="next"
+          value={accountValues.email}
+          onChangeText={handleEmailChange}
+          error={emailErrorText !== ''}
+          errorText={emailErrorText}
+          autoCapitalize="none"
+          autoCompleteType="email"
+          textContentType="emailAddress"
+          keyboardType="email-address"
+        />
+        <TextInput
+          label="Password"
+          returnKeyType="next"
+          value={accountValues.password}
+          onChangeText={handlePasswordChange}
+          error={passwordErrorText !== ''}
+          errorText={passwordErrorText}
+          secureTextEntry
+        />
+        <TextInput
+          label="Password Confirm"
+          returnKeyType="done"
+          value={accountValues.password_confirmation}
+          onChangeText={handlePasswordConfirmChange}
+          error={passwordConfirmErrorText !== ''}
+          errorText={passwordConfirmErrorText}
+          secureTextEntry
+        />
+        <Button
+          mode="contained"
+          onPress={requestRegister}
+          style={styles.button}>
+          Sign Up
+        </Button>
+      </Background>
+    </ScrollView>
   );
 };
 
