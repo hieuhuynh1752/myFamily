@@ -42,13 +42,13 @@ const ToDoScreen = ({navigation}) => {
   const {state} = useAuth();
   const memberIds = state.members.map((member) => member.id);
   //End of Core States declaration
-  
+
   //Core GraphQL Mutations declaration
   const [
     requestUpdateToDoMutation,
     {loading: requestUpdateToDoLoading},
   ] = useMutation(REQUEST_UPDATE_TO_DO);
-  
+
   const [
     requestDeleteToDoMutation,
     {loading: requestDeleteToDoLoading},
@@ -387,7 +387,7 @@ const ToDoScreen = ({navigation}) => {
             contentContainerStyle={{
               backgroundColor: 'white',
               padding: 20,
-              width: '80%',
+              width: '90%',
               alignSelf: 'center',
             }}>
             <Text
@@ -398,45 +398,47 @@ const ToDoScreen = ({navigation}) => {
               Edit To do task
             </Text>
             <Divider style={{marginVertical: 9}} />
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: '500',
-              }}>
-              Task title
-            </Text>
-            <TextInput
-              value={toDoTitle}
-              onChangeText={handleEditTitle}
-              style={styles.input}
-            />
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: '500',
-                marginVertical: 9,
-              }}>
-              Assign to:
-            </Text>
-            <View style={styles.row}>
-              <RenderFamilyMembersChips />
-            </View>
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: '500',
-                marginVertical: 9,
-              }}>
-              Task description:
-            </Text>
-            <TextInput
-              value={toDoDescription}
-              onChangeText={handleEditDescription}
-              style={styles.input}
-              multiline
-              numberOfLines={6}
-            />
-            <Divider style={{marginVertical: 9}} />
+            <ScrollView>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: '500',
+                }}>
+                Task title
+              </Text>
+              <TextInput
+                value={toDoTitle}
+                onChangeText={handleEditTitle}
+                style={styles.input}
+              />
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: '500',
+                  marginVertical: 9,
+                }}>
+                Assign to:
+              </Text>
+              <View style={styles.row}>
+                <RenderFamilyMembersChips />
+              </View>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: '500',
+                  marginVertical: 9,
+                }}>
+                Task description:
+              </Text>
+              <TextInput
+                value={toDoDescription}
+                onChangeText={handleEditDescription}
+                style={styles.input}
+                multiline
+                numberOfLines={4}
+              />
+              <Divider style={{marginVertical: 9}} />
+            </ScrollView>
             <View style={styles.row}>
               <Button
                 mode="contained"

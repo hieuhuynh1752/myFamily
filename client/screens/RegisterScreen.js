@@ -56,24 +56,28 @@ const RegisterScreen = ({navigation}) => {
 
   //Core State handlers declaration
   const handleUsernameChange = (event) => {
+    setNameErrorText('');
     setAccountValues((previousState) => {
       return {...previousState, name: event};
     });
   };
 
   const handleEmailChange = (event) => {
+    setEmailErrorText('');
     setAccountValues((previousState) => {
       return {...previousState, email: event};
     });
   };
 
   const handlePasswordChange = (event) => {
+    setPasswordErrorText('');
     setAccountValues((previousState) => {
       return {...previousState, password: event};
     });
   };
 
   const handlePasswordConfirmChange = (event) => {
+    setPasswordConfirmErrorText('');
     setAccountValues((previousState) => {
       return {...previousState, password_confirmation: event};
     });

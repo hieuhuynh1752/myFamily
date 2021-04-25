@@ -8,8 +8,9 @@ export const emailValidator = (email) => {
   };
   
   export const passwordValidator = (password) => {
+    const re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/;
     if (!password || password.length <= 0) return 'Password cannot be empty.';
-  
+    if(!re.test(password)) return 'Ooops! Invalid password.'
     return '';
   };
   
