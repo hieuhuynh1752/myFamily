@@ -4,8 +4,14 @@ import React, {useState, useEffect} from 'react';
 import Paragraph from '../components/Paragraph';
 import CreatePostInput from '../components/CreatePostInput';
 import {IconButton, Button, Menu, TextInput} from 'react-native-paper';
-import {ImageBackground, StyleSheet, ScrollView, Keyboard} from 'react-native';
-import {Portal, Modal, Card, Divider} from 'react-native-paper';
+import {
+  ImageBackground,
+  StyleSheet,
+  ScrollView,
+  Keyboard,
+  View,
+} from 'react-native';
+import {Portal, Modal, Card, Divider, Text} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
 import BackButton from '../components/BackButton';
 //end of UI components imports
@@ -43,7 +49,6 @@ const PostDetailsScreen = ({route, navigation}) => {
 
   //List of Comments Component
   const CommentList = () => {
-    
     //Delete Comment Button Component for Comment Component
     const CommentButton = ({commentId, memberId}) => {
       if (state.role !== 'Admin' && memberId !== state.memberId) return null;
@@ -57,8 +62,10 @@ const PostDetailsScreen = ({route, navigation}) => {
                   (commentRef) =>
                     readField('id', commentRef) !== deleteComment.id,
                 );
-                
-                setComments(comments.filter((comment)=> comment.id !== deleteComment.id));
+
+                setComments(
+                  comments.filter((comment) => comment.id !== deleteComment.id),
+                );
                 return newComments;
               },
             },
@@ -162,7 +169,6 @@ const PostDetailsScreen = ({route, navigation}) => {
 
   //Get Post info Component
   const GetPost = () => {
-
     //Like Button Component for Post info Component
     const LikeButton = ({like, postId, post}) => {
       const [isLiked, setIsLiked] = useState(false);
@@ -201,7 +207,7 @@ const PostDetailsScreen = ({route, navigation}) => {
           });
         },
       });
-      
+
       const likeButton = isLiked ? (
         <Button
           style={{width: '50%'}}
@@ -364,32 +370,46 @@ const PostDetailsScreen = ({route, navigation}) => {
                   width: '80%',
                   alignSelf: 'center',
                 }}>
-                <Card>
-                  <Card.Title title="Edit post" style={{alignSelf: 'center'}} />
-                  <Card.Content>
-                    <CreatePostInput
-                      value={editPost.content}
-                      onChangeText={handleEditPost}
-                    />
-                    <Button
-                      mode="contained"
-                      color={theme.colors.background}
-                      disabled={requestUpdatePostLoading}
-                      onPress={() => {
-                        setEditPost({id: parseInt(postId), content: content});
-                        closeEdit();
-                      }}>
-                      Cancel
-                    </Button>
-                    <Button
-                      mode="contained"
-                      color={theme.colors.accent}
-                      loading={requestUpdatePostLoading}
-                      onPress={requestUpdatePost}>
-                      Update
-                    </Button>
-                  </Card.Content>
-                </Card>
+                <Text
+                  style={{
+                    fontSize: 19,
+                    fontWeight: '900',
+                  }}>
+                  Edit Post
+                </Text>
+                <Divider style={{marginVertical: 9}} />
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: '500',
+                  }}>
+                  Post content
+                </Text>
+                <CreatePostInput
+                  value={editPost.content}
+                  onChangeText={handleEditPost}
+                />
+                <View style={styles.row}>
+                  <Button
+                    mode="contained"
+                    color={theme.colors.background}
+                    style={{width: '50%'}}
+                    disabled={requestUpdatePostLoading}
+                    onPress={() => {
+                      setEditPost({id: parseInt(postId), content: content});
+                      closeEdit();
+                    }}>
+                    Cancel
+                  </Button>
+                  <Button
+                    mode="contained"
+                    color={theme.colors.accent}
+                    style={{width: '50%'}}
+                    loading={requestUpdatePostLoading}
+                    onPress={requestUpdatePost}>
+                    Update
+                  </Button>
+                </View>
               </Modal>
               <Modal
                 visible={deleteVisible}
@@ -400,33 +420,43 @@ const PostDetailsScreen = ({route, navigation}) => {
                   width: '80%',
                   alignSelf: 'center',
                 }}>
-                <Card>
-                  <Card.Title
-                    title="Delete post"
-                    style={{alignSelf: 'center'}}
-                  />
-                  <Card.Content>
-                    <Paragraph>
-                      Are you sure you want to delete this post?
-                    </Paragraph>
-                    <Button
-                      mode="contained"
-                      color={theme.colors.background}
-                      disabled={requestDeletePostLoading}
-                      onPress={() => {
-                        closeDelete();
-                      }}>
-                      Cancel
-                    </Button>
-                    <Button
-                      mode="contained"
-                      color={theme.colors.notification}
-                      loading={requestDeletePostLoading}
-                      onPress={requestDeletePost}>
-                      Delete
-                    </Button>
-                  </Card.Content>
-                </Card>
+                <Text
+                  style={{
+                    fontSize: 19,
+                    fontWeight: '900',
+                  }}>
+                  Delete post
+                </Text>
+                <Divider style={{marginVertical: 9}} />
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: '500',
+                    marginVertical: 9,
+                  }}>
+                  Are you sure you want to delete this post?
+                </Text>
+                <Divider style={{marginVertical: 9}} />
+                <View style={styles.row}>
+                  <Button
+                    mode="contained"
+                    color={theme.colors.background}
+                    style={{width: '50%'}}
+                    disabled={requestDeletePostLoading}
+                    onPress={() => {
+                      closeDelete();
+                    }}>
+                    Cancel
+                  </Button>
+                  <Button
+                    mode="contained"
+                    color={theme.colors.notification}
+                    style={{width: '50%'}}
+                    loading={requestDeletePostLoading}
+                    onPress={requestDeletePost}>
+                    Delete
+                  </Button>
+                </View>
               </Modal>
             </Portal>
           </>
@@ -469,7 +499,7 @@ const PostDetailsScreen = ({route, navigation}) => {
     );
   };
   //End of Get Post Info Component
-  
+
   return (
     <ImageBackground
       source={require('../assets/background_dot.png')}
@@ -490,6 +520,10 @@ const styles = StyleSheet.create({
     marginVertical: 16,
     alignSelf: 'center',
     elevation: 6,
+  },
+  row: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
   },
 });
 

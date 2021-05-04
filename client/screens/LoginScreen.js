@@ -45,6 +45,7 @@ const LoginScreen = ({navigation}) => {
     REQUEST_LOGIN,
     {
       update(proxy, {data: userData}) {
+        console.log(accountValues)
         dispatch({type: LOGIN, payload: userData.login});
       },
       variables: accountValues,

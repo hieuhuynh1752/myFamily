@@ -23,7 +23,7 @@ const Stack = createStackNavigator();
 //Authentication Screens Stack Component
 const Auth = () => {
   return (
-    <Stack.Navigator initialRouteName="LoginScreen">
+    <Stack.Navigator initialRouteName="Login">
       <Stack.Screen
         name="Login"
         component={LoginScreen}
